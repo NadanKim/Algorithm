@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="정렬">
+      <UniqueIdentifier>{1c286948-54e1-4176-b110-abb9e0e9e15e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sort\SelectionSort.hpp">
+      <Filter>정렬</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
