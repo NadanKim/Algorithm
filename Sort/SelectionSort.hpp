@@ -1,9 +1,13 @@
 #pragma once
 #include "../Common.hpp"
 
-void SelectionSort(int arr[], int n)
+void SelectionSort(int arr[], int n, bool printData = false)
 {
-	Common::PrintArray(arr, n);
+	if (printData)
+	{
+		Common::PrintArray(arr, n);
+	}
+
 	for (int i = 1; i < n; i++)
 	{
 		int biggest{ n - i };
@@ -15,6 +19,10 @@ void SelectionSort(int arr[], int n)
 			}
 		}
 		Common::Swap(arr, biggest, n - i);
-		Common::PrintArray(arr, n);
+
+		if (printData)
+		{
+			Common::PrintArray(arr, n);
+		}
 	}
 }
