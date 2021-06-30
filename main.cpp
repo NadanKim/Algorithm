@@ -1,4 +1,4 @@
-﻿#include "Sort/SelectionSort.hpp"
+﻿#include "Sort/BubbleSort.hpp"
 #include "Common.hpp"
 
 int main()
@@ -13,7 +13,7 @@ int main()
 	n = Common::LoadRandomNumbersInFile(&arr);
 
 	Common::StartClock();
-	SelectionSort(arr, n/*/, true/**/);
+	BubbleSort(arr, n/*/, true/**/);
 	Common::StopClock();
 	Common::PrintElapsedTime();
 

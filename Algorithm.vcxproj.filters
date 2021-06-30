@@ -13,5 +13,8 @@
       <Filter>정렬</Filter>
     </ClInclude>
     <ClInclude Include="Common.hpp" />
+    <ClInclude Include="Sort\BubbleSort.hpp">
+      <Filter>정렬</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
