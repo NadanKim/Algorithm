@@ -9,14 +9,14 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Sort\SelectionSort.hpp">
-      <Filter>정렬</Filter>
-    </ClInclude>
     <ClInclude Include="Common.hpp" />
-    <ClInclude Include="Sort\BubbleSort.hpp">
+    <ClInclude Include="정렬\BubbleSort.hpp">
       <Filter>정렬</Filter>
     </ClInclude>
-    <ClInclude Include="Sort\InsertionSort.hpp">
+    <ClInclude Include="정렬\InsertionSort.hpp">
+      <Filter>정렬</Filter>
+    </ClInclude>
+    <ClInclude Include="정렬\SelectionSort.hpp">
       <Filter>정렬</Filter>
     </ClInclude>
   </ItemGroup>

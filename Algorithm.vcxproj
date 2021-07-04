@@ -23,9 +23,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.hpp" />
-    <ClInclude Include="Sort\BubbleSort.hpp" />
-    <ClInclude Include="Sort\InsertionSort.hpp" />
-    <ClInclude Include="Sort\SelectionSort.hpp" />
+    <ClInclude Include="정렬\BubbleSort.hpp" />
+    <ClInclude Include="정렬\InsertionSort.hpp" />
+    <ClInclude Include="정렬\SelectionSort.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
