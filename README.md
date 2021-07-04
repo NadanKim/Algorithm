@@ -5,3 +5,4 @@
 * 정렬
   * [선택 정렬(SelectionSort)](https://github.com/NadanKim/Algorithm/blob/main/Sort/SelectionSort.hpp)
   * [버블 정렬(BubbleSort)](https://github.com/NadanKim/Algorithm/blob/main/Sort/BubbleSort.hpp)
+  * [삽입 정렬(InsertionSort)](https://github.com/NadanKim/Algorithm/blob/main/Sort/InsertionSort.hpp)
