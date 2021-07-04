@@ -24,6 +24,7 @@
   <ItemGroup>
     <ClInclude Include="Common.hpp" />
     <ClInclude Include="Sort\BubbleSort.hpp" />
+    <ClInclude Include="Sort\InsertionSort.hpp" />
     <ClInclude Include="Sort\SelectionSort.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
