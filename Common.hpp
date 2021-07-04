@@ -42,10 +42,10 @@ namespace Common
 
 		std::ofstream ofs("./Randoms.txt");
 
-		ofs << n << "; ";
+		ofs << n << ' ';
 		for (int i = 0; i < n; ++i)
 		{
-			ofs << arr[i] << "; ";
+			ofs << arr[i] << ' ';
 		}
 
 		ofs.close();
@@ -65,7 +65,7 @@ namespace Common
 		int n;
 		ifs >> n;
 
-		*(arr) = new int[n];
+		*arr = new int[n];
 		for (int i = 0; i < n; ++i)
 		{
 			ifs >> (*arr)[i];

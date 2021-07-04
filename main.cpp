@@ -13,7 +13,7 @@ int main()
 	n = Common::LoadRandomNumbersInFile(&arr);
 
 	Common::StartClock();
-	InsertionSort(arr, n/**/, true/**/);
+	InsertionSort(arr, n/*/, true/**/);
 	Common::StopClock();
 	Common::PrintElapsedTime();
 
