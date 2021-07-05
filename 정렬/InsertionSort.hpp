@@ -14,19 +14,21 @@ void InsertionSort(int arr[], int n, bool printData = false)
 		Common::PrintArray(arr, n);
 	}
 
-	for (int i = 1; i < n; i++)
+	for (int i = 1, j; i < n; i++)
 	{
-		for (int j = i; j > 0; j--)
+		int val{ arr[i] };
+		for (j = i; j > 0; j--)
 		{
-			if (arr[j] < arr[j - 1])
+			if (val < arr[j - 1])
 			{
-				Common::Swap(arr, j, j - 1);
+				arr[j] = arr[j - 1];
 			}
 			else
 			{
 				break;
 			}
 		}
+		arr[j] = val;
 
 		if (printData)
 		{
