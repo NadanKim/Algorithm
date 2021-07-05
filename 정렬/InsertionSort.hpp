@@ -16,13 +16,11 @@ void InsertionSort(int arr[], int n, bool printData = false)
 
 	for (int i = 1; i < n; i++)
 	{
-		int curIdx{ i };
-		for (int j = i - 1; j >= 0; j--)
+		for (int j = i; j > 0; j--)
 		{
-			if (arr[curIdx] < arr[j])
+			if (arr[j] < arr[j - 1])
 			{
-				Common::Swap(arr, curIdx, j);
-				curIdx = j;
+				Common::Swap(arr, j, j - 1);
 			}
 			else
 			{
