@@ -22,5 +22,8 @@
     <ClInclude Include="정렬\MergeSort.hpp">
       <Filter>정렬</Filter>
     </ClInclude>
+    <ClInclude Include="정렬\QuickSort.hpp">
+      <Filter>정렬</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
