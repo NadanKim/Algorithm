@@ -8,3 +8,4 @@
   * [삽입 정렬(InsertionSort)](https://github.com/NadanKim/Algorithm/blob/main/%EC%A0%95%EB%A0%AC/InsertionSort.hpp)
   * [병합 정렬(MergeSort)](https://github.com/NadanKim/Algorithm/blob/main/%EC%A0%95%EB%A0%AC/MergeSort.hpp)
   * [퀵 정렬(QuickSort)](https://github.com/NadanKim/Algorithm/blob/main/%EC%A0%95%EB%A0%AC/QuickSort.hpp)
+  * [힙 정렬(HeapSort)](https://github.com/NadanKim/Algorithm/blob/main/%EC%A0%95%EB%A0%AC/HeapSort.hpp)
