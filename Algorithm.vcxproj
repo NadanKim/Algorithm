@@ -24,6 +24,7 @@
   <ItemGroup>
     <ClInclude Include="Common.hpp" />
     <ClInclude Include="정렬\BubbleSort.hpp" />
+    <ClInclude Include="정렬\HeapSort.hpp" />
     <ClInclude Include="정렬\InsertionSort.hpp" />
     <ClInclude Include="정렬\MergeSort.hpp" />
     <ClInclude Include="정렬\QuickSort.hpp" />

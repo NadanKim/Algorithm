@@ -1,4 +1,4 @@
-﻿#include "정렬/QuickSort.hpp"
+﻿#include "정렬/HeapSort.hpp"
 #include "Common.hpp"
 
 int main()
@@ -13,7 +13,7 @@ int main()
 	n = Common::LoadRandomNumbersInFile(&arr);
 
 	Common::StartClock();
-	QuickSort(arr, n/*/, true/**/);
+	HeapSort(arr, n/*/, true/**/);
 	Common::StopClock();
 	Common::PrintElapsedTime();
 
