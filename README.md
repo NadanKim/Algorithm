@@ -9,3 +9,5 @@
   * [병합 정렬(MergeSort)](https://github.com/NadanKim/Algorithm/blob/main/%EC%A0%95%EB%A0%AC/MergeSort.hpp)
   * [퀵 정렬(QuickSort)](https://github.com/NadanKim/Algorithm/blob/main/%EC%A0%95%EB%A0%AC/QuickSort.hpp)
   * [힙 정렬(HeapSort)](https://github.com/NadanKim/Algorithm/blob/main/%EC%A0%95%EB%A0%AC/HeapSort.hpp)
+* 선택
+  * [평균 선형시간 선택(AvgNSelection)](https://github.com/NadanKim/Algorithm/blob/main/%EC%84%A0%ED%83%9D/AvgNSelection.hpp)
