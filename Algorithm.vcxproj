@@ -23,6 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.hpp" />
+    <ClInclude Include="선택\AvgNSelection.hpp" />
     <ClInclude Include="정렬\BubbleSort.hpp" />
     <ClInclude Include="정렬\HeapSort.hpp" />
     <ClInclude Include="정렬\InsertionSort.hpp" />

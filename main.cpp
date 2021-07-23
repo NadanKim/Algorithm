@@ -1,4 +1,4 @@
-﻿#include "정렬/HeapSort.hpp"
+﻿#include "선택/AvgNSelection.hpp"
 #include "Common.hpp"
 
 int main()
@@ -13,7 +13,7 @@ int main()
 	n = Common::LoadRandomNumbersInFile(&arr);
 
 	Common::StartClock();
-	HeapSort(arr, n/*/, true/**/);
+	AvgNSelection(arr, n, 3/*/, true/**/);
 	Common::StopClock();
 	Common::PrintElapsedTime();
 
