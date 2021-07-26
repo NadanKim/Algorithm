@@ -11,3 +11,4 @@
   * [힙 정렬(HeapSort)](https://github.com/NadanKim/Algorithm/blob/main/%EC%A0%95%EB%A0%AC/HeapSort.hpp)
 * 선택
   * [평균 선형시간 선택(AvgNSelection)](https://github.com/NadanKim/Algorithm/blob/main/%EC%84%A0%ED%83%9D/AvgNSelection.hpp)
+  * [최악의 경우 선형시간 선택(LinearSelection)](https://github.com/NadanKim/Algorithm/blob/main/%EC%84%A0%ED%83%9D/LinearSelection.hpp)
