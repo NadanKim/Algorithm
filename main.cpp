@@ -1,4 +1,4 @@
-﻿#include "선택/AvgNSelection.hpp"
+﻿#include "선택/LinearSelection.hpp"
 #include "Common.hpp"
 
 int main()
@@ -13,7 +13,7 @@ int main()
 	n = Common::LoadRandomNumbersInFile(&arr);
 
 	Common::StartClock();
-	AvgNSelection(arr, n, 3/*/, true/**/);
+	LinearSelection(arr, n, 6/*/, true/**/);
 	Common::StopClock();
 	Common::PrintElapsedTime();
 

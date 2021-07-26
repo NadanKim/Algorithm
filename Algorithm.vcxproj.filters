@@ -34,5 +34,8 @@
     <ClInclude Include="선택\AvgNSelection.hpp">
       <Filter>선택</Filter>
     </ClInclude>
+    <ClInclude Include="선택\LinearSelection.hpp">
+      <Filter>선택</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
