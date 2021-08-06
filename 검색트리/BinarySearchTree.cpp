@@ -1,4 +1,4 @@
-#include "검색트리/BinarySearchTree.h"
+#include "BinarySearchTree.h"
 
 #pragma region 노드 매니저
 /// <summary>

@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BinarySearchTree.cpp" />
     <ClCompile Include="Common.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="검색트리\BinarySearchTree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h" />
