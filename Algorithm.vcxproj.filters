@@ -2,6 +2,10 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="BinarySearchTree.cpp">
+      <Filter>검색트리</Filter>
+    </ClCompile>
+    <ClCompile Include="Common.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="정렬">
@@ -10,9 +14,12 @@
     <Filter Include="선택">
       <UniqueIdentifier>{9e88cadd-39d2-4594-a283-de9d4e574007}</UniqueIdentifier>
     </Filter>
+    <Filter Include="검색트리">
+      <UniqueIdentifier>{57783ce5-661c-440a-b54d-1e8b0a28059e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Common.hpp" />
+    <ClInclude Include="Common.h" />
     <ClInclude Include="정렬\BubbleSort.hpp">
       <Filter>정렬</Filter>
     </ClInclude>
@@ -36,6 +43,9 @@
     </ClInclude>
     <ClInclude Include="선택\LinearSelection.hpp">
       <Filter>선택</Filter>
+    </ClInclude>
+    <ClInclude Include="검색트리\BinarySearchTree.h">
+      <Filter>검색트리</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

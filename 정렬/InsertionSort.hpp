@@ -1,5 +1,5 @@
 #pragma once
-#include "../Common.hpp"
+#include "../Common.h"
 
 /// <summary>
 /// 주어진 배열을 정렬한다.

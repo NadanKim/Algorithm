@@ -1,5 +1,5 @@
 #pragma once
-#include "../Common.hpp"
+#include "../Common.h"
 
 void MergeSort(int arr[], int tempArr[], int p, int r, bool printData = false, int n = 0);
 void Merge(int arr[], int tempArr[], int p, int q, int r);

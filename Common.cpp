@@ -1,14 +1,4 @@
-#pragma once
-#include <iostream>
-#include <fstream>
-#include <ctime>
-
-//#define MAKE_RANDOM_NUMBERS
-
-#ifdef MAKE_RANDOM_NUMBERS
-#include <random>
-#include <limits>
-#endif
+#include "Common.h"
 
 namespace Common
 {
@@ -18,7 +8,7 @@ namespace Common
 	/// </summary>
 	/// <param name="n">생성할 난수의 개수</param>
 	/// <returns>생성된 난수 배열</returns>
-	int* GenerateRandomNumber(int n = 100'000)
+	int* GenerateRandomNumber(int n)
 	{
 		std::default_random_engine randomEngine;
 		std::uniform_int_distribution<int> distribution(0, INT_MAX);
@@ -36,7 +26,7 @@ namespace Common
 	/// 난수를 생성하여 파일에 저장한다.
 	/// </summary>
 	/// <param name="n">생성할 난수의 개수</param>
-	void MakeRandomNumbersFile(int n = 100'000)
+	void MakeRandomNumbersFile(int n)
 	{
 		int* arr = GenerateRandomNumber(n);
 
@@ -51,6 +41,7 @@ namespace Common
 		ofs.close();
 	}
 #endif
+
 
 #pragma region 파일 입출력
 	/// <summary>
@@ -76,11 +67,8 @@ namespace Common
 		return n;
 	}
 #pragma endregion
-	
-#pragma region 시간 측정
-	std::clock_t startTime;
-	std::clock_t endTime;
 
+#pragma region 시간 측정
 	/// <summary>
 	/// 시간 측정을 시작한다.
 	/// </summary>

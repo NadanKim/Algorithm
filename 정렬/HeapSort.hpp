@@ -1,5 +1,5 @@
 #pragma once
-#include "../Common.hpp"
+#include "../Common.h"
 
 void BuildHeap(int arr[], int n);
 void Heapify(int arr[], int k, int n);

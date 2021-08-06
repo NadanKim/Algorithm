@@ -1,5 +1,5 @@
 #pragma once
-#include "../Common.hpp"
+#include "../Common.h"
 
 void QuickSort(int arr[], int p, int r, bool printData = false, int n = 0);
 int Partition(int arr[], int p, int r);
