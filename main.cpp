@@ -1,5 +1,5 @@
 ﻿#include "Common.h"
-#include "검색트리/BinarySearchTree.h"
+#include "검색트리/RedBlackTree.h"
 
 int main()
 {
@@ -13,7 +13,7 @@ int main()
 	//n = Common::LoadRandomNumbersInFile(&arr);
 
 	Common::StartClock();
-	BinarySearchTree tree;
+	RedBlackTree tree;
 	for (int i = 0; i < n; i++)
 	{
 		tree.Insert(arr[i]);
