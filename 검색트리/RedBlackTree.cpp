@@ -2,14 +2,23 @@
 
 #pragma region 노드 매니저
 /// <summary>
+/// 레드 블랙 노드의 매니저에 nil 노드 등록
+/// </summary>
+/// <param name="nil">nil 노드</param>
+RedBlackNodeManager::RedBlackNodeManager(RedBlackNode* nil)
+	: _nil(nil), _nodes(nullptr)
+{
+}
+
+/// <summary>
 /// 종료 전 생성하 노드 제거
 /// </summary>
 RedBlackNodeManager::~RedBlackNodeManager()
 {
-	while (nodes != nullptr)
+	while (_nodes != nullptr)
 	{
-		RedBlackNode* temp{ nodes };
-		nodes = nodes->left;
+		RedBlackNode* temp{ _nodes };
+		_nodes = _nodes->left;
 		delete temp;
 	}
 }
@@ -20,8 +29,8 @@ RedBlackNodeManager::~RedBlackNodeManager()
 /// <param name="node">사용후 반환할 노드</param>
 void RedBlackNodeManager::Push(RedBlackNode* node)
 {
-	node->left = nodes;
-	nodes = node;
+	node->left = _nodes;
+	_nodes = node;
 }
 
 /// <summary>
@@ -30,11 +39,11 @@ void RedBlackNodeManager::Push(RedBlackNode* node)
 /// <returns>사용할 수 있는 노드</returns>
 RedBlackNode* RedBlackNodeManager::Pop()
 {
-	RedBlackNode* node{ nodes };
+	RedBlackNode* node{ _nodes };
 
 	if (node != nullptr)
 	{
-		nodes = node->left;
+		_nodes = node->left;
 		node->Clear();
 	}
 	else
@@ -42,11 +51,26 @@ RedBlackNode* RedBlackNodeManager::Pop()
 		node = new RedBlackNode();
 	}
 
+	node->color = NodeColor::Red;
+	node->left = node->right = _nil;
+
 	return node;
 }
 #pragma endregion
 
 #pragma region 레드 블랙 트리
+/// <summary>
+/// 레드 블랙 트리에 필요한 정보 세팅
+/// </summary>
+RedBlackTree::RedBlackTree()
+	: _root(nullptr)
+{
+	_nil = new RedBlackNode();
+	_nil->color = NodeColor::Black;
+
+	_nodeManager = new RedBlackNodeManager(_nil);
+}
+
 /// <summary>
 /// 종료 전 남은 노드 제거 처리
 /// </summary>
@@ -107,7 +131,36 @@ void RedBlackTree::Insert(int data)
 		return;
 	}
 
-	Insert(_root, data);
+	RedBlackNode* x{ Insert(_root, data) };
+	RedBlackNode* p{ x->parent };
+	
+	if (x == _root || p->color == NodeColor::Black)
+	{
+		return;
+	}
+
+	RedBlackNode* y{ x->GetSibling() };
+	RedBlackNode* p2{ p->parent };
+	RedBlackNode* s{ p->GetSibling() };
+
+	// case 1
+	if (s->color == NodeColor::Red)
+	{
+
+	}
+	else
+	{
+		// case 2-1
+		if (x->IsRightChild())
+		{
+
+		}
+		// case 2-2
+		else
+		{
+
+		}
+	}
 }
 
 /// <summary>
@@ -130,40 +183,47 @@ void RedBlackTree::Delete(int data)
 /// </summary>
 /// <param name="parent">삽입해야 할 노드의 부모</param>
 /// <param name="data">삽입할 값</param>
-void RedBlackTree::Insert(RedBlackNode* parent, int data)
+/// <returns>새로 삽입한 노드</returns>
+RedBlackNode* RedBlackTree::Insert(RedBlackNode* parent, int data)
 {
 	if (parent == nullptr)
 	{
-		RedBlackNode* node{ _nodeManager.Pop() };
+		RedBlackNode* node{ _nodeManager->Pop() };
 		node->data = data;
 		_root = node;
+
+		return node;
 	}
 	else if (parent->data > data)
 	{
 		if (parent->left == nullptr)
 		{
-			RedBlackNode* node{ _nodeManager.Pop() };
+			RedBlackNode* node{ _nodeManager->Pop() };
 			node->data = data;
 			node->parent = parent;
 			parent->left = node;
+
+			return node;
 		}
 		else
 		{
-			Insert(parent->left, data);
+			return Insert(parent->left, data);
 		}
 	}
 	else
 	{
 		if (parent->right == nullptr)
 		{
-			RedBlackNode* node{ _nodeManager.Pop() };
+			RedBlackNode* node{ _nodeManager->Pop() };
 			node->data = data;
 			node->parent = parent;
 			parent->right = node;
+
+			return node;
 		}
 		else
 		{
-			Insert(parent->right, data);
+			return Insert(parent->right, data);
 		}
 	}
 }
@@ -191,7 +251,7 @@ void RedBlackTree::Delete(RedBlackNode* node)
 			_root = nullptr;
 		}
 
-		_nodeManager.Push(node);
+		_nodeManager->Push(node);
 	}
 	else if (node->left != nullptr && node->right == nullptr ||
 		node->left == nullptr && node->right != nullptr)
@@ -216,7 +276,7 @@ void RedBlackTree::Delete(RedBlackNode* node)
 		}
 		child->parent = parent;
 
-		_nodeManager.Push(node);
+		_nodeManager->Push(node);
 	}
 	else
 	{

@@ -1,14 +1,20 @@
 #pragma once
 #include "../Common.h"
 
+enum class NodeColor
+{
+	Red,
+	Black
+};
+
 /// <summary>
 /// 레드 블랙 트리에 사용할 노드
 /// </summary>
 struct RedBlackNode
 {
-	RedBlackNode() : data{ 0 }, parent{ nullptr }, 
+	RedBlackNode() : data{ 0 }, color{ NodeColor::Red }, parent{ nullptr },
 		left{ nullptr }, right{ nullptr } {}
-	RedBlackNode(int data) : data{ data }, parent{ nullptr }, 
+	RedBlackNode(int data) : data{ data }, color{ NodeColor::Red }, parent{ nullptr },
 		left{ nullptr }, right{ nullptr } {}
 
 	void Clear()
@@ -19,7 +25,36 @@ struct RedBlackNode
 		right = nullptr;
 	}
 
+	bool HasParent()
+	{
+		return parent != nullptr;
+	}
+
+	bool IsRightChild()
+	{
+		return (parent->right == this);
+	}
+
+	RedBlackNode* GetSibling()
+	{
+		RedBlackNode* sibling{ nullptr };
+
+		if (HasParent())
+		{
+			if (parent->left == this)
+			{
+				sibling = parent->right;
+			}
+			else
+			{
+				sibling = parent->left;
+			}
+		}
+		return sibling;
+	}
+
 	int data;
+	NodeColor color;
 	RedBlackNode* parent;
 	RedBlackNode* left;
 	RedBlackNode* right;
@@ -31,13 +66,15 @@ struct RedBlackNode
 class RedBlackNodeManager
 {
 public:
+	RedBlackNodeManager(RedBlackNode* nil);
 	~RedBlackNodeManager();
 
 	void Push(RedBlackNode* node);
 	RedBlackNode* Pop();
 
 private:
-	RedBlackNode* nodes;
+	RedBlackNode* _nil;
+	RedBlackNode* _nodes;
 };
 
 /// <summary>
@@ -46,6 +83,7 @@ private:
 class RedBlackTree
 {
 public:
+	RedBlackTree();
 	~RedBlackTree();
 
 	bool Exists(int data);
@@ -54,7 +92,8 @@ public:
 	void Delete(int data);
 
 private:
-	void Insert(RedBlackNode* parent, int data);
+	RedBlackNode* Insert(RedBlackNode* parent, int data);
+
 	void Delete(RedBlackNode* node);
 	RedBlackNode& GetNode(int data);
 	bool IsLeftNode(RedBlackNode* node);
@@ -62,5 +101,6 @@ private:
 
 private:
 	RedBlackNode* _root;
-	RedBlackNodeManager _nodeManager;
+	RedBlackNode* _nil;
+	RedBlackNodeManager* _nodeManager;
 };
