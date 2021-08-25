@@ -131,36 +131,7 @@ void RedBlackTree::Insert(int data)
 		return;
 	}
 
-	RedBlackNode* x{ Insert(_root, data) };
-	RedBlackNode* p{ x->parent };
-	
-	if (x == _root || p->color == NodeColor::Black)
-	{
-		return;
-	}
-
-	RedBlackNode* y{ x->GetSibling() };
-	RedBlackNode* p2{ p->parent };
-	RedBlackNode* s{ p->GetSibling() };
-
-	// case 1
-	if (s->color == NodeColor::Red)
-	{
-
-	}
-	else
-	{
-		// case 2-1
-		if (x->IsRightChild())
-		{
-
-		}
-		// case 2-2
-		else
-		{
-
-		}
-	}
+	AdjustInsertedNode(Insert(_root, data));
 }
 
 /// <summary>
@@ -225,6 +196,58 @@ RedBlackNode* RedBlackTree::Insert(RedBlackNode* parent, int data)
 		{
 			return Insert(parent->right, data);
 		}
+	}
+}
+
+/// <summary>
+/// 레드 블랙 트리에 삽인한 노드를 규칙에 맞게 정렬한다.
+/// </summary>
+/// <param name="node">문제가 되는 노드</param>
+void RedBlackTree::AdjustInsertedNode(RedBlackNode* node)
+{
+	RedBlackNode* x{ node };
+	RedBlackNode* p{ x->parent };
+
+	if (x == _root || p->color == NodeColor::Black)
+	{
+		return;
+	}
+
+	RedBlackNode* y{ x->GetSibling() };
+	RedBlackNode* p2{ p->parent };
+	RedBlackNode* s{ p->GetSibling() };
+
+	// case 1
+	if (s->color == NodeColor::Red)
+	{
+		p->color = s->color = NodeColor::Black;
+		p2->color = NodeColor::Red;
+		if (p2 == _root)
+		{
+			p2->color = NodeColor::Red;
+		}
+		else
+		{
+			AdjustInsertedNode(p2);
+		}
+	}
+	else
+	{
+		// case 2-1
+		if (IsLeftNode(p) && IsRightNode(x))
+		{
+			RotateLeft(p);
+			// case 2-2
+			RotateRight(p2);
+		}
+		else if (IsRightNode(p) && IsLeftNode(x))
+		{
+			RotateRight(p);
+			// case 2-2
+			RotateLeft(p2);
+		}
+		// case 2-2
+		p2->SwapColor(p);
 	}
 }
 
@@ -331,5 +354,35 @@ bool RedBlackTree::IsLeftNode(RedBlackNode* node)
 bool RedBlackTree::IsRightNode(RedBlackNode* node)
 {
 	return node->parent != nullptr && node->parent->right == node;
+}
+
+/// <summary>
+/// 주어진 노드를 기준으로 왼쪽으로 회전한다.
+/// </summary>
+/// <param name="node">기준 노드</param>
+void RedBlackTree::RotateLeft(RedBlackNode* node)
+{
+	RedBlackNode* x{ node->right };
+	RedBlackNode* p{ node };
+	RedBlackNode* p2{ p->parent };
+
+	p->right = x->left;
+	x->left = p;
+	p2->left = x;
+}
+
+/// <summary>
+/// 주어진 노드를 기준으로 오른쪽으로 회전한다.
+/// </summary>
+/// <param name="node">기준 노드</param>
+void RedBlackTree::RotateRight(RedBlackNode* node)
+{
+	RedBlackNode* x{ node->left };
+	RedBlackNode* p{ node };
+	RedBlackNode* p2{ p->parent };
+
+	p->left = x->right;
+	x->right = p;
+	p2->right = x;
 }
 #pragma endregion

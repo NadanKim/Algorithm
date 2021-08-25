@@ -25,21 +25,11 @@ struct RedBlackNode
 		right = nullptr;
 	}
 
-	bool HasParent()
-	{
-		return parent != nullptr;
-	}
-
-	bool IsRightChild()
-	{
-		return (parent->right == this);
-	}
-
 	RedBlackNode* GetSibling()
 	{
 		RedBlackNode* sibling{ nullptr };
 
-		if (HasParent())
+		if (parent != nullptr)
 		{
 			if (parent->left == this)
 			{
@@ -51,6 +41,13 @@ struct RedBlackNode
 			}
 		}
 		return sibling;
+	}
+
+	void SwapColor(RedBlackNode* other)
+	{
+		NodeColor temp{ other->color };
+		other->color = color;
+		color = temp;
 	}
 
 	int data;
@@ -93,11 +90,17 @@ public:
 
 private:
 	RedBlackNode* Insert(RedBlackNode* parent, int data);
+	void AdjustInsertedNode(RedBlackNode* node);
 
 	void Delete(RedBlackNode* node);
+
 	RedBlackNode& GetNode(int data);
+
 	bool IsLeftNode(RedBlackNode* node);
 	bool IsRightNode(RedBlackNode* node);
+
+	void RotateLeft(RedBlackNode* node);
+	void RotateRight(RedBlackNode* node);
 
 private:
 	RedBlackNode* _root;
