@@ -92,7 +92,8 @@ private:
 	RedBlackNode* Insert(RedBlackNode* parent, int data);
 	void AdjustInsertedNode(RedBlackNode* node);
 
-	void Delete(RedBlackNode* node);
+	RedBlackNode* Delete(RedBlackNode* node);
+	void AdjustDeletedNode(RedBlackNode* node);
 
 	RedBlackNode& GetNode(int data);
 

@@ -146,7 +146,7 @@ void RedBlackTree::Delete(int data)
 	}
 
 	RedBlackNode* node{ &GetNode(data) };
-	Delete(node);
+	AdjustDeletedNode(Delete(node));
 }
 
 /// <summary>
@@ -200,7 +200,7 @@ RedBlackNode* RedBlackTree::Insert(RedBlackNode* parent, int data)
 }
 
 /// <summary>
-/// 레드 블랙 트리에 삽인한 노드를 규칙에 맞게 정렬한다.
+/// 레드 블랙 트리에 삽입한 노드를 규칙에 맞게 정렬한다.
 /// </summary>
 /// <param name="node">문제가 되는 노드</param>
 void RedBlackTree::AdjustInsertedNode(RedBlackNode* node)
@@ -255,32 +255,40 @@ void RedBlackTree::AdjustInsertedNode(RedBlackNode* node)
 /// 레드 블랙 트리 제거 처리
 /// </summary>
 /// <param name="node">제거할 노드</param>
-void RedBlackTree::Delete(RedBlackNode* node)
+RedBlackNode* RedBlackTree::Delete(RedBlackNode* node)
 {
 	RedBlackNode* parent{ node->parent };
+	RedBlackNode* x{ nullptr };
 
-	if (node->left == nullptr && node->right == nullptr)
+	if (node->left == _nil && node->right == _nil)
 	{
 		if (IsLeftNode(node))
 		{
-			parent->left = nullptr;
+			parent->left = _nil;
+			_nil->parent = parent;
 		}
 		else if (IsRightNode(node))
 		{
-			parent->right = nullptr;
+			parent->right = _nil;
+			_nil->parent = parent;
 		}
 		else
 		{
 			_root = nullptr;
 		}
 
+		if (node->color == NodeColor::Black)
+		{
+			x = _nil;
+		}
+
 		_nodeManager->Push(node);
 	}
-	else if (node->left != nullptr && node->right == nullptr ||
-		node->left == nullptr && node->right != nullptr)
+	else if (node->left != _nil && node->right == _nil ||
+		node->left == _nil && node->right != _nil)
 	{
 		RedBlackNode* child{ node->left };
-		if (child == nullptr)
+		if (child == _nil)
 		{
 			child = node->right;
 		}
@@ -288,29 +296,118 @@ void RedBlackTree::Delete(RedBlackNode* node)
 		if (IsLeftNode(node))
 		{
 			parent->left = child;
+			child->parent = parent;
 		}
 		else if (IsRightNode(node))
 		{
 			parent->right = child;
+			child->parent = parent;
 		}
 		else
 		{
 			_root = child;
+			child->parent = nullptr;
 		}
 		child->parent = parent;
+
+		if (node->color == NodeColor::Black && child->color == NodeColor::Red)
+		{
+			x = child;
+		}
 
 		_nodeManager->Push(node);
 	}
 	else
 	{
-		RedBlackNode* child{ node->left };
-		while (child->right != nullptr)
+		RedBlackNode* child{ node->right };
+		while (child->left != _nil)
 		{
-			child = child->right;
+			child = child->left;
 		}
 		node->data = child->data;
 		Delete(child);
 	}
+
+	return x;
+}
+
+/// <summary>
+/// 레드 블랙 트리에서 노드를 제거한 뒤 규칙에 맞게 정렬한다.
+/// </summary>
+/// <param name="node">문제가 되는 노드</param>
+void RedBlackTree::AdjustDeletedNode(RedBlackNode* node)
+{
+	if (node == nullptr)
+	{
+		return;
+	}
+
+	RedBlackNode* x{ node };
+	RedBlackNode* p{ x->parent };
+	RedBlackNode* s{ x->GetSibling() };
+	RedBlackNode* l{ s->left };
+	RedBlackNode* r{ s->right };
+
+	// case 1-1
+	if (p->color == NodeColor::Red && s->color == NodeColor::Black &&
+		l->color == NodeColor::Black && r->color == NodeColor::Black)
+	{
+		p->SwapColor(s);
+	}
+	// case *-2
+	else if (s->color == NodeColor::Black && r->color == NodeColor::Red)
+	{
+		if (IsLeftNode(x))
+		{
+			RotateLeft(p);
+			r->color = NodeColor::Black;
+		}
+		else
+		{
+			RotateRight(p);
+			l->color = NodeColor::Black;
+		}
+		p->SwapColor(s);
+	}
+	// case *-3
+	else if (s->color == NodeColor::Black && 
+		l->color == NodeColor::Red && r->color == NodeColor::Black)
+	{
+		if (IsLeftNode(x))
+		{
+			RotateRight(s);
+			l->SwapColor(s);
+		}
+		else
+		{
+			RotateLeft(s);
+			r->SwapColor(s);
+		}
+		AdjustDeletedNode(x);
+	}
+	// case 2-1
+	else if (p->color == NodeColor::Black && s->color == NodeColor::Black &&
+		l->color == NodeColor::Black && r->color == NodeColor::Black)
+	{
+		s->color = NodeColor::Red;
+		AdjustDeletedNode(p);
+	}
+	// case 2-4
+	else if (p->color == NodeColor::Black && s->color == NodeColor::Red)
+	{
+		if (IsLeftNode(x))
+		{
+			RotateLeft(p);
+		}
+		else
+		{
+			RotateRight(p);
+		}
+		p->SwapColor(s);
+		AdjustDeletedNode(x);
+	}
+	
+	_nil->parent = nullptr;
 }
 
 RedBlackNode& RedBlackTree::GetNode(int data)
@@ -367,8 +464,18 @@ void RedBlackTree::RotateLeft(RedBlackNode* node)
 	RedBlackNode* p2{ p->parent };
 
 	p->right = x->left;
+	x->left->parent = p;
 	x->left = p;
-	p2->left = x;
+	p->parent = x;
+	if (p2 != nullptr)
+	{
+		p2->left = x;
+	}
+	else
+	{
+		_root = x;
+	}
+	x->parent = p2;
 }
 
 /// <summary>
@@ -382,7 +489,17 @@ void RedBlackTree::RotateRight(RedBlackNode* node)
 	RedBlackNode* p2{ p->parent };
 
 	p->left = x->right;
+	x->right->parent = p;
 	x->right = p;
-	p2->right = x;
+	p->parent = x;
+	if (p2 != nullptr)
+	{
+		p2->right = x;
+	}
+	else
+	{
+		_root = x;
+	}
+	x->parent = p2;
 }
 #pragma endregion
