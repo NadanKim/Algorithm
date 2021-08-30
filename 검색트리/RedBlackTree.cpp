@@ -117,7 +117,7 @@ bool RedBlackTree::Exists(int data)
 /// <returns>값을 가진 노드, 없으면 nullptr</returns>
 const RedBlackNode& RedBlackTree::Search(int data)
 {
-	return GetNode(data);
+	return *GetNode(data);
 }
 
 /// <summary>
@@ -145,8 +145,7 @@ void RedBlackTree::Delete(int data)
 		return;
 	}
 
-	RedBlackNode* node{ &GetNode(data) };
-	AdjustDeletedNode(Delete(node));
+	AdjustDeletedNode(Delete(GetNode(data)));
 }
 
 /// <summary>
@@ -410,7 +409,12 @@ void RedBlackTree::AdjustDeletedNode(RedBlackNode* node)
 	_nil->parent = nullptr;
 }
 
-RedBlackNode& RedBlackTree::GetNode(int data)
+/// <summary>
+/// 주어진 값을 가진 노드의 포인터를 반환한다.
+/// </summary>
+/// <param name="data">찾으려는 값</param>
+/// <returns>노드의 포인터</returns>
+RedBlackNode* RedBlackTree::GetNode(int data)
 {
 	RedBlackNode* node{ _root };
 
@@ -430,7 +434,7 @@ RedBlackNode& RedBlackTree::GetNode(int data)
 		}
 	}
 
-	return *node;
+	return node;
 }
 
 /// <summary>

@@ -56,7 +56,9 @@ public:
 private:
 	void Insert(BinarySearchNode* parent, int data);
 	void Delete(BinarySearchNode* node);
-	BinarySearchNode& GetNode(int data);
+
+	BinarySearchNode* GetNode(int data);
+
 	bool IsLeftNode(BinarySearchNode* node);
 	bool IsRightNode(BinarySearchNode* node);
 

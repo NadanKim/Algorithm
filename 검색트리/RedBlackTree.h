@@ -95,7 +95,7 @@ private:
 	RedBlackNode* Delete(RedBlackNode* node);
 	void AdjustDeletedNode(RedBlackNode* node);
 
-	RedBlackNode& GetNode(int data);
+	RedBlackNode* GetNode(int data);
 
 	bool IsLeftNode(RedBlackNode* node);
 	bool IsRightNode(RedBlackNode* node);

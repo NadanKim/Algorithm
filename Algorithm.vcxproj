@@ -21,11 +21,13 @@
   <ItemGroup>
     <ClCompile Include="Common.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="검색트리\AVLTree.cpp" />
     <ClCompile Include="검색트리\BinarySearchTree.cpp" />
     <ClCompile Include="검색트리\RedBlackTree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h" />
+    <ClInclude Include="검색트리\AVLTree.h" />
     <ClInclude Include="검색트리\BinarySearchTree.h" />
     <ClInclude Include="검색트리\RedBlackTree.h" />
     <ClInclude Include="선택\AvgNSelection.hpp" />
