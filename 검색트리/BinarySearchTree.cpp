@@ -276,4 +276,13 @@ bool BinarySearchTree::IsRightNode(BinarySearchNode* node)
 {
 	return node->parent != nullptr && node->parent->right == node;
 }
+
+/// <summary>
+/// 트리의 최대 깊이를 반환한다.
+/// </summary>
+/// <returns>트리의 최대 깊이</returns>
+int BinarySearchTree::GetTreeMaxDepth()
+{
+	return _root != nullptr ? _root->GetMaxDepth() : 0;
+}
 #pragma endregion

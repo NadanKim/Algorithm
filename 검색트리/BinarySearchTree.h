@@ -1,5 +1,8 @@
 #pragma once
 #include "../Common.h"
+#include <string>
+
+using std::string;
 
 /// <summary>
 /// 이진 검색 트리에 사용할 노드
@@ -17,6 +20,13 @@ struct BinarySearchNode
 		parent = nullptr;
 		left = nullptr;
 		right = nullptr;
+	}
+
+	int GetMaxDepth()
+	{
+		int leftMaxDepth{ left != nullptr ? left->GetMaxDepth() : 0 };
+		int rightMaxDpth{ right != nullptr ? right->GetMaxDepth() : 0 };
+		return (leftMaxDepth > rightMaxDpth ? leftMaxDepth : rightMaxDpth) + 1;
 	}
 
 	int data;
@@ -61,6 +71,10 @@ private:
 
 	bool IsLeftNode(BinarySearchNode* node);
 	bool IsRightNode(BinarySearchNode* node);
+
+	int GetTreeMaxDepth();
+
+	void PrintBinarySearchTree();
 
 private:
 	BinarySearchNode* _root;
