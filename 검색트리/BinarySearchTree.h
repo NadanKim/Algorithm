@@ -1,8 +1,10 @@
 #pragma once
 #include "../Common.h"
 #include <string>
+#include <queue>
 
 using std::string;
+using std::queue;
 
 /// <summary>
 /// 이진 검색 트리에 사용할 노드
@@ -63,6 +65,8 @@ public:
 	void Insert(int data);
 	void Delete(int data);
 
+	void PrintBinarySearchTree();
+
 private:
 	void Insert(BinarySearchNode* parent, int data);
 	void Delete(BinarySearchNode* node);
@@ -74,9 +78,8 @@ private:
 
 	int GetTreeMaxDepth();
 
-	void PrintBinarySearchTree();
-
 private:
 	BinarySearchNode* _root;
 	BinarySearchNodeManager _nodeManager;
+	queue<BinarySearchNode*> _queue;
 };

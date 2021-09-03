@@ -125,6 +125,43 @@ void BinarySearchTree::Delete(int data)
 }
 
 /// <summary>
+/// 이진 검색 트리를 출력한다.
+/// </summary>
+void BinarySearchTree::PrintBinarySearchTree()
+{
+	if (_root == nullptr)
+	{
+		std::cout << "EMPTY\n";
+		return;
+	}
+
+	_queue.push(_root);
+	while (!_queue.empty())
+	{
+		BinarySearchNode* node{ _queue.front() };
+		_queue.pop();
+
+		std::cout << node->data << ' ';
+
+		if (node == _root || IsRightNode(node))
+		{
+			std::cout << '\n';
+		}
+
+		if (node->left != nullptr)
+		{
+			_queue.push(node->left);
+		}
+		if (node->right != nullptr)
+		{
+			_queue.push(node->right);
+		}
+	}
+	
+	std::cout << "\n\n";
+}
+
+/// <summary>
 /// 이진 검색 트리 삽입 처리
 /// </summary>
 /// <param name="parent">삽입해야 할 노드의 부모</param>
