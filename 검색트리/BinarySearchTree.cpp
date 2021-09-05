@@ -135,29 +135,67 @@ void BinarySearchTree::PrintBinarySearchTree()
 		return;
 	}
 
-	_queue.push(_root);
-	while (!_queue.empty())
+	BinarySearchNode* node{ _root };
+	int depth{ node->GetMaxDepth() };
+	int center{ (depth - 1) * 5 / 2 };
+
+	bool isNeedReturn{ ((node == _root) || IsRightNode(node) && IsRightNode(node->parent)) };
+
+	for (int i = 0; i < center; i++)
 	{
-		BinarySearchNode* node{ _queue.front() };
-		_queue.pop();
-
-		std::cout << node->data << ' ';
-
-		if (node == _root || IsRightNode(node))
-		{
-			std::cout << '\n';
-		}
-
-		if (node->left != nullptr)
-		{
-			_queue.push(node->left);
-		}
-		if (node->right != nullptr)
-		{
-			_queue.push(node->right);
-		}
+		std::cout << ' ';
 	}
-	
+	std::cout << node->data;
+	for (int i = 0; i < center; i++)
+	{
+		std::cout << ' ';
+	}
+
+	if (isNeedReturn)
+	{
+		std::cout << '\n';
+	}
+
+	std::cout << "¦£";
+	for (int i = 1; i < center; i++)
+	{
+		std::cout << "¦¡";
+	}
+	std::cout << "¦ª";
+	for (int i = 1; i < center; i++)
+	{
+		std::cout << "¦¡";
+	}
+	std::cout << "¦¤";
+
+	if (isNeedReturn)
+	{
+		std::cout << '\n';
+	}
+
+	//_queue.push(_root);
+	//while (!_queue.empty())
+	//{
+	//	BinarySearchNode* node{ _queue.front() };
+	//	_queue.pop();
+
+	//	std::cout << node->data << ' ';
+
+	//	if (node == _root || IsRightNode(node))
+	//	{
+	//		std::cout << '\n';
+	//	}
+
+	//	if (node->left != nullptr)
+	//	{
+	//		_queue.push(node->left);
+	//	}
+	//	if (node->right != nullptr)
+	//	{
+	//		_queue.push(node->right);
+	//	}
+	//}
+	//
 	std::cout << "\n\n";
 }
 
