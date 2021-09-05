@@ -135,67 +135,23 @@ void BinarySearchTree::PrintBinarySearchTree()
 		return;
 	}
 
-	BinarySearchNode* node{ _root };
-	int depth{ node->GetMaxDepth() };
-	int center{ (depth - 1) * 5 / 2 };
-
-	bool isNeedReturn{ ((node == _root) || IsRightNode(node) && IsRightNode(node->parent)) };
-
-	for (int i = 0; i < center; i++)
+	_queue.push(_root);
+	while (!_queue.empty())
 	{
-		std::cout << ' ';
+		BinarySearchNode* node{ _queue.front() };
+		_queue.pop();
+
+		PrintBinarySearchTree(node);
+
+		if (node->left != nullptr)
+		{
+			_queue.push(node->left);
+		}
+		if (node->right != nullptr)
+		{
+			_queue.push(node->right);
+		}
 	}
-	std::cout << node->data;
-	for (int i = 0; i < center; i++)
-	{
-		std::cout << ' ';
-	}
-
-	if (isNeedReturn)
-	{
-		std::cout << '\n';
-	}
-
-	std::cout << "┌";
-	for (int i = 1; i < center; i++)
-	{
-		std::cout << "─";
-	}
-	std::cout << "┴";
-	for (int i = 1; i < center; i++)
-	{
-		std::cout << "─";
-	}
-	std::cout << "┐";
-
-	if (isNeedReturn)
-	{
-		std::cout << '\n';
-	}
-
-	//_queue.push(_root);
-	//while (!_queue.empty())
-	//{
-	//	BinarySearchNode* node{ _queue.front() };
-	//	_queue.pop();
-
-	//	std::cout << node->data << ' ';
-
-	//	if (node == _root || IsRightNode(node))
-	//	{
-	//		std::cout << '\n';
-	//	}
-
-	//	if (node->left != nullptr)
-	//	{
-	//		_queue.push(node->left);
-	//	}
-	//	if (node->right != nullptr)
-	//	{
-	//		_queue.push(node->right);
-	//	}
-	//}
-	//
 	std::cout << "\n\n";
 }
 
@@ -301,6 +257,75 @@ void BinarySearchTree::Delete(BinarySearchNode* node)
 		}
 		node->data = child->data;
 		Delete(child);
+	}
+}
+
+/// <summary>
+/// 이진 검색 트리를 출력한다.
+/// </summary>
+/// <param name="node">현재 출력할 노드</param>
+void BinarySearchTree::PrintBinarySearchTree(BinarySearchNode* node)
+{
+	int depth{ node->GetMaxDepth() };
+	int center{ (depth - 1) * 5 / 2 };
+
+	bool isNeedReturn{ ((node == _root) || IsRightNode(node) && IsRightNode(node->parent)) };
+
+	for (int i = 0; i < center; i++)
+	{
+		std::cout << ' ';
+	}
+	std::cout << node->data;
+	for (int i = 0; i < center; i++)
+	{
+		std::cout << ' ';
+	}
+
+	if (isNeedReturn)
+	{
+		std::cout << '\n';
+	}
+
+	if (node->HasLeftChild())
+	{
+		std::cout << "┌";
+		for (int i = 1; i < center; i++)
+		{
+			std::cout << "─";
+		}
+	}
+	else
+	{
+		for (int i = 0; i < center; i++)
+		{
+			std::cout << ' ';
+		}
+	}
+
+	if (node->HasLeftChild() || node->HasRightChild())
+	{
+		std::cout << "┴";
+	}
+
+	if (node->HasRightChild())
+	{
+		for (int i = 1; i < center; i++)
+		{
+			std::cout << "─";
+		}
+		std::cout << "┐";
+	}
+	else
+	{
+		for (int i = 0; i < center + 3; i++)
+		{
+			std::cout << ' ';
+		}
+	}
+
+	if (isNeedReturn)
+	{
+		std::cout << '\n';
 	}
 }
 

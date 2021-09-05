@@ -31,6 +31,16 @@ struct BinarySearchNode
 		return (leftMaxDepth > rightMaxDpth ? leftMaxDepth : rightMaxDpth) + 1;
 	}
 
+	bool HasLeftChild()
+	{
+		return left != nullptr;
+	}
+
+	bool HasRightChild()
+	{
+		return right != nullptr;
+	}
+
 	int data;
 	BinarySearchNode* parent;
 	BinarySearchNode* left;
@@ -70,6 +80,8 @@ public:
 private:
 	void Insert(BinarySearchNode* parent, int data);
 	void Delete(BinarySearchNode* node);
+
+	void PrintBinarySearchTree(BinarySearchNode* node);
 
 	BinarySearchNode* GetNode(int data);
 
