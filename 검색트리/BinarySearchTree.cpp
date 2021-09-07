@@ -135,6 +135,14 @@ void BinarySearchTree::PrintBinarySearchTree()
 		return;
 	}
 
+	int depth{ _root->GetMaxDepth() };
+
+	for (int i = 1; i <= depth; i++)
+	{
+		_numberMap[i] = "";
+		_stickMap[i] = "";
+	}
+
 	_queue.push(_root);
 	while (!_queue.empty())
 	{
@@ -151,6 +159,12 @@ void BinarySearchTree::PrintBinarySearchTree()
 		{
 			_queue.push(node->right);
 		}
+	}
+
+	for (int i = 1; i <= depth; i++)
+	{
+		std::cout << _numberMap[i] << '\n';
+		std::cout << _stickMap[i] << '\n';
 	}
 	std::cout << "\n\n";
 }
@@ -266,25 +280,28 @@ void BinarySearchTree::Delete(BinarySearchNode* node)
 /// <param name="node">현재 출력할 노드</param>
 void BinarySearchTree::PrintBinarySearchTree(BinarySearchNode* node)
 {
-	static string numberStr;
-	static string stickStr;
-
+	int targetDepth{ node->GetCurDepth() };
 	int depth{ node->GetMaxDepth() };
-	int center{ (depth - 1) * 5 / 2 };
+	int width{ (depth - 1) * 5 };
+	int center{ width / 2 };
 
-	bool isNeedReturn{ ((node == _root) || IsRightNode(node) 
-		&& (node->parent == _root || IsRightNode(node->parent))) };
+	string& numberStr{ _numberMap[targetDepth] };
+	string& stickStr{ _stickMap[targetDepth] };
 
-	for (int i = 0; i < center; i++)
+	for (int i = 0; i < width; i++)
 	{
 		numberStr.push_back(' ');
 	}
 	numberStr.append(std::to_string(node->data));
-	for (int i = 0; i < center; i++)
+	for (int i = 0; i < width; i++)
 	{
 		numberStr.push_back(' ');
 	}
 
+	for (int i = 0; i < center; i++)
+	{
+		stickStr.push_back(' ');
+	}
 	if (node->HasLeftChild())
 	{
 		stickStr.append("┌");
@@ -295,7 +312,7 @@ void BinarySearchTree::PrintBinarySearchTree(BinarySearchNode* node)
 	}
 	else
 	{
-		for (int i = 0; i < center; i++)
+		for (int i = 0; i < width; i++)
 		{
 			stickStr.push_back(' ');
 		}
@@ -316,22 +333,10 @@ void BinarySearchTree::PrintBinarySearchTree(BinarySearchNode* node)
 	}
 	else
 	{
-		for (int i = 0; i < center + 3; i++)
+		for (int i = 0; i < width; i++)
 		{
 			stickStr.push_back(' ');
 		}
-	}
-
-	if (isNeedReturn)
-	{
-		std::cout << numberStr << '\n';
-		if (stickStr.size() > 0)
-		{
-			std::cout << stickStr << '\n';
-		}
-
-		numberStr.clear();
-		stickStr.clear();
 	}
 }
 

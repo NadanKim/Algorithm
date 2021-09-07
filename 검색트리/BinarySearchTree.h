@@ -2,9 +2,11 @@
 #include "../Common.h"
 #include <string>
 #include <queue>
+#include <map>
 
 using std::string;
 using std::queue;
+using std::map;
 
 /// <summary>
 /// 이진 검색 트리에 사용할 노드
@@ -29,6 +31,11 @@ struct BinarySearchNode
 		int leftMaxDepth{ left != nullptr ? left->GetMaxDepth() : 0 };
 		int rightMaxDpth{ right != nullptr ? right->GetMaxDepth() : 0 };
 		return (leftMaxDepth > rightMaxDpth ? leftMaxDepth : rightMaxDpth) + 1;
+	}
+
+	int GetCurDepth()
+	{
+		return (parent != nullptr ? parent->GetCurDepth() : 0) + 1;
 	}
 
 	bool HasLeftChild()
@@ -94,4 +101,6 @@ private:
 	BinarySearchNode* _root;
 	BinarySearchNodeManager _nodeManager;
 	queue<BinarySearchNode*> _queue;
+	map<int, string> _numberMap;
+	map<int, string> _stickMap;
 };
