@@ -266,66 +266,72 @@ void BinarySearchTree::Delete(BinarySearchNode* node)
 /// <param name="node">현재 출력할 노드</param>
 void BinarySearchTree::PrintBinarySearchTree(BinarySearchNode* node)
 {
+	static string numberStr;
+	static string stickStr;
+
 	int depth{ node->GetMaxDepth() };
 	int center{ (depth - 1) * 5 / 2 };
 
-	bool isNeedReturn{ ((node == _root) || IsRightNode(node) && IsRightNode(node->parent)) };
+	bool isNeedReturn{ ((node == _root) || IsRightNode(node) 
+		&& (node->parent == _root || IsRightNode(node->parent))) };
 
 	for (int i = 0; i < center; i++)
 	{
-		std::cout << ' ';
+		numberStr.push_back(' ');
 	}
-	std::cout << node->data;
+	numberStr.append(std::to_string(node->data));
 	for (int i = 0; i < center; i++)
 	{
-		std::cout << ' ';
-	}
-
-	if (isNeedReturn)
-	{
-		std::cout << '\n';
+		numberStr.push_back(' ');
 	}
 
 	if (node->HasLeftChild())
 	{
-		std::cout << "┌";
+		stickStr.append("┌");
 		for (int i = 1; i < center; i++)
 		{
-			std::cout << "─";
+			stickStr.append("─");
 		}
 	}
 	else
 	{
 		for (int i = 0; i < center; i++)
 		{
-			std::cout << ' ';
+			stickStr.push_back(' ');
 		}
 	}
 
 	if (node->HasLeftChild() || node->HasRightChild())
 	{
-		std::cout << "┴";
+		stickStr.append("┴");
 	}
 
 	if (node->HasRightChild())
 	{
 		for (int i = 1; i < center; i++)
 		{
-			std::cout << "─";
+			stickStr.append("─");
 		}
-		std::cout << "┐";
+		stickStr.append("┐");
 	}
 	else
 	{
 		for (int i = 0; i < center + 3; i++)
 		{
-			std::cout << ' ';
+			stickStr.push_back(' ');
 		}
 	}
 
 	if (isNeedReturn)
 	{
-		std::cout << '\n';
+		std::cout << numberStr << '\n';
+		if (stickStr.size() > 0)
+		{
+			std::cout << stickStr << '\n';
+		}
+
+		numberStr.clear();
+		stickStr.clear();
 	}
 }
 
