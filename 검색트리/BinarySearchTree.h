@@ -13,6 +13,8 @@ using std::map;
 /// </summary>
 struct BinarySearchNode
 {
+	const static size_t Width = 5;
+
 	BinarySearchNode() : data{ 0 }, parent{ nullptr }, 
 		left{ nullptr }, right{ nullptr } {}
 	BinarySearchNode(int data) : data{ data }, parent{ nullptr }, 
@@ -46,6 +48,16 @@ struct BinarySearchNode
 	bool HasRightChild()
 	{
 		return right != nullptr;
+	}
+
+	string ToString()
+	{
+		string dataStr = std::to_string(data);
+		size_t spaceCnt = Width - dataStr.size();
+		size_t leftSpaceCnt = spaceCnt / 2;
+		size_t rightSpaceCnt = spaceCnt / 2 + spaceCnt % 2;
+
+		return string(leftSpaceCnt, '_') + dataStr + string(rightSpaceCnt, '_');
 	}
 
 	int data;
