@@ -116,10 +116,12 @@ private:
 	bool IsRightNode(BinarySearchNode* node);
 
 	int GetTreeMaxDepth();
+	string GetNodeStick(BinarySearchNode* node, int blankSize);
 
 private:
 	BinarySearchNode* _root;
 	BinarySearchNodeManager _nodeManager;
 	queue<BinarySearchNode*> _queue;
 	map<int, string> _numberMap;
+	map<int, string> _stickMap;
 };

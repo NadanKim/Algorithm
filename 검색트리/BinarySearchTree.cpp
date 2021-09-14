@@ -157,6 +157,7 @@ void BinarySearchTree::PrintBinarySearchTree()
 	for (int i = 1; i <= maxDepth; i++)
 	{
 		_numberMap[i] = "";
+		_stickMap[i] = "";
 	}
 
 	_queue.push(_root);
@@ -192,6 +193,7 @@ void BinarySearchTree::PrintBinarySearchTree()
 
 	for (int i = 1; i <= maxDepth; i++)
 	{
+		std::cout << _stickMap[i] << '\n';
 		std::cout << _numberMap[i] << '\n';
 	}
 	std::cout << "\n\n";
@@ -318,6 +320,9 @@ void BinarySearchTree::PrintBinarySearchTree(BinarySearchNode* node, int lineWid
 	string& numberStr{ _numberMap[curDepth] };
 	numberStr.append(string(blankSize, ' '));
 	numberStr.append(node->ToString());
+
+	string& stickStr{ _stickMap[curDepth] };
+	stickStr.append(GetNodeStick(node, blankSize));
 }
 
 /// <summary>
@@ -375,5 +380,55 @@ bool BinarySearchTree::IsRightNode(BinarySearchNode* node)
 int BinarySearchTree::GetTreeMaxDepth()
 {
 	return _root != nullptr ? _root->GetMaxDepth() : 0;
+}
+
+/// <summary>
+/// 주어진 노드에 맞는 막대를 만들어 반환한다.
+/// </summary>
+/// <param name="node">처리할 노드</param>
+/// <returns>막대 노드 문자열</returns>
+string BinarySearchTree::GetNodeStick(BinarySearchNode* node, int blankSize)
+{
+	if (node == _root)
+	{
+		return "";
+	}
+
+	int halfNodeWidth{ BinarySearchNode::Width / 2 };
+	int halfBlankSize{ blankSize / 2 };
+
+	if (node->isEmpty)
+	{
+		int stringLength{ BinarySearchNode::Width + blankSize };
+		return string(stringLength, ' ');
+	}
+
+	string result;
+	if (IsLeftNode(node))
+	{
+		int leftSpaceCnt{ blankSize + halfNodeWidth
+			- (BinarySearchNode::Width % 2 == 0 ? 1 : 0) };
+		result.append(string(leftSpaceCnt, ' '));
+		result.append("┌");
+		int rightHypenCnt{ halfBlankSize + halfNodeWidth - 1 };
+		for (int i = 0; i < rightHypenCnt; i++)
+		{
+			result.append("─");
+		}
+		result.append("┘");
+	}
+	else
+	{
+		result.append("└");
+		int leftHypenCnt{ halfBlankSize + halfNodeWidth - 1 };
+		for (int i = 0; i < leftHypenCnt; i++)
+		{
+			result.append("─");
+		}
+		result.append("┐");
+		result.append(string(halfNodeWidth, ' '));
+	}
+
+	return result;
 }
 #pragma endregion
