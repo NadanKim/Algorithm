@@ -13,11 +13,11 @@ using std::map;
 /// </summary>
 struct BinarySearchNode
 {
-	const static size_t Width = 5;
+	const static int Width = 5;
 
-	BinarySearchNode() : data{ 0 }, parent{ nullptr }, 
+	BinarySearchNode() : isEmpty(false), data{ 0 }, parent{ nullptr },
 		left{ nullptr }, right{ nullptr } {}
-	BinarySearchNode(int data) : data{ data }, parent{ nullptr }, 
+	BinarySearchNode(int data) : isEmpty(false), data{ data }, parent{ nullptr },
 		left{ nullptr }, right{ nullptr } {}
 
 	void Clear()
@@ -52,6 +52,11 @@ struct BinarySearchNode
 
 	string ToString()
 	{
+		if (isEmpty)
+		{
+			return string(Width, '_');
+		}
+
 		string dataStr = std::to_string(data);
 		size_t spaceCnt = Width - dataStr.size();
 		size_t leftSpaceCnt = spaceCnt / 2;
@@ -59,6 +64,8 @@ struct BinarySearchNode
 
 		return string(leftSpaceCnt, '_') + dataStr + string(rightSpaceCnt, '_');
 	}
+
+	bool isEmpty;
 
 	int data;
 	BinarySearchNode* parent;
@@ -76,6 +83,7 @@ public:
 
 	void Push(BinarySearchNode* node);
 	BinarySearchNode* Pop();
+	BinarySearchNode* GetEmptyNode(BinarySearchNode* parent);
 
 private:
 	BinarySearchNode* nodes;
@@ -100,7 +108,7 @@ private:
 	void Insert(BinarySearchNode* parent, int data);
 	void Delete(BinarySearchNode* node);
 
-	void PrintBinarySearchTree(BinarySearchNode* node);
+	void PrintBinarySearchTree(BinarySearchNode* node, int lineWidth);
 
 	BinarySearchNode* GetNode(int data);
 
@@ -114,5 +122,4 @@ private:
 	BinarySearchNodeManager _nodeManager;
 	queue<BinarySearchNode*> _queue;
 	map<int, string> _numberMap;
-	map<int, string> _stickMap;
 };

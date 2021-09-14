@@ -44,6 +44,20 @@ BinarySearchNode* BinarySearchNodeManager::Pop()
 
 	return node;
 }
+
+/// <summary>
+/// 주어진 노드를 부모로 하는 공백 노드를 반환한다.
+/// </summary>
+/// <param name="parent">부모 노드</param>
+/// <returns>공백 노드</returns>
+BinarySearchNode* BinarySearchNodeManager::GetEmptyNode(BinarySearchNode* parent)
+{
+	BinarySearchNode* emptyNode = Pop();
+	emptyNode->parent = parent;
+	emptyNode->isEmpty = true;
+
+	return emptyNode;
+}
 #pragma endregion
 
 #pragma region 이진 검색 트리
@@ -135,12 +149,14 @@ void BinarySearchTree::PrintBinarySearchTree()
 		return;
 	}
 
-	int depth{ _root->GetMaxDepth() };
+	int maxDepth{ _root->GetMaxDepth() };
+	int maxNodeCount{ static_cast<int>(std::pow(2, maxDepth - 1)) };
+	int totalCount{ maxNodeCount * 2 + 1 };
+	int lineWidth{ totalCount * BinarySearchNode::Width };
 
-	for (int i = 1; i <= depth; i++)
+	for (int i = 1; i <= maxDepth; i++)
 	{
 		_numberMap[i] = "";
-		_stickMap[i] = "";
 	}
 
 	_queue.push(_root);
@@ -149,22 +165,34 @@ void BinarySearchTree::PrintBinarySearchTree()
 		BinarySearchNode* node{ _queue.front() };
 		_queue.pop();
 
-		PrintBinarySearchTree(node);
+		PrintBinarySearchTree(node, lineWidth);
 
 		if (node->left != nullptr)
 		{
 			_queue.push(node->left);
 		}
+		else if (!node->isEmpty)
+		{
+			_queue.push(_nodeManager.GetEmptyNode(node));
+		}
 		if (node->right != nullptr)
 		{
 			_queue.push(node->right);
 		}
+		else if (!node->isEmpty)
+		{
+			_queue.push(_nodeManager.GetEmptyNode(node));
+		}
+
+		if (node->isEmpty)
+		{
+			_nodeManager.Push(node);
+		}
 	}
 
-	for (int i = 1; i <= depth; i++)
+	for (int i = 1; i <= maxDepth; i++)
 	{
 		std::cout << _numberMap[i] << '\n';
-		std::cout << _stickMap[i] << '\n';
 	}
 	std::cout << "\n\n";
 }
@@ -278,66 +306,18 @@ void BinarySearchTree::Delete(BinarySearchNode* node)
 /// 이진 검색 트리를 출력한다.
 /// </summary>
 /// <param name="node">현재 출력할 노드</param>
-void BinarySearchTree::PrintBinarySearchTree(BinarySearchNode* node)
+void BinarySearchTree::PrintBinarySearchTree(BinarySearchNode* node, int lineWidth)
 {
-	int targetDepth{ node->GetCurDepth() };
-	int depth{ node->GetMaxDepth() };
-	int width{ (depth - 1) * 5 };
-	int center{ width / 2 };
+	int curDepth{ node->GetCurDepth() };
+	int curNodeCount{ static_cast<int>(std::pow(2, curDepth - 1)) };
+	int totalNodeSize{ curNodeCount * BinarySearchNode::Width };
+	int blankCount{ curNodeCount + 1 };
+	int totalBlankSize{ lineWidth - totalNodeSize };
+	int blankSize{ totalBlankSize / blankCount };
 
-	string& numberStr{ _numberMap[targetDepth] };
-	string& stickStr{ _stickMap[targetDepth] };
-
-	for (int i = 0; i < width; i++)
-	{
-		numberStr.push_back(' ');
-	}
-	numberStr.append(std::to_string(node->data));
-	for (int i = 0; i < width; i++)
-	{
-		numberStr.push_back(' ');
-	}
-
-	for (int i = 0; i < center; i++)
-	{
-		stickStr.push_back(' ');
-	}
-	if (node->HasLeftChild())
-	{
-		stickStr.append("┌");
-		for (int i = 1; i < center; i++)
-		{
-			stickStr.append("─");
-		}
-	}
-	else
-	{
-		for (int i = 0; i < width; i++)
-		{
-			stickStr.push_back(' ');
-		}
-	}
-
-	if (node->HasLeftChild() || node->HasRightChild())
-	{
-		stickStr.append("┴");
-	}
-
-	if (node->HasRightChild())
-	{
-		for (int i = 1; i < center; i++)
-		{
-			stickStr.append("─");
-		}
-		stickStr.append("┐");
-	}
-	else
-	{
-		for (int i = 0; i < width; i++)
-		{
-			stickStr.push_back(' ');
-		}
-	}
+	string& numberStr{ _numberMap[curDepth] };
+	numberStr.append(string(blankSize, ' '));
+	numberStr.append(node->ToString());
 }
 
 /// <summary>
