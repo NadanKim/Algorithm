@@ -17,7 +17,11 @@ int main()
 	tree.PrintBinarySearchTree();
 
 	tree.Delete(5);
+	tree.PrintBinarySearchTree();
+
 	tree.Delete(10);
+	tree.PrintBinarySearchTree();
+
 	tree.Delete(15);
 	tree.PrintBinarySearchTree();
 

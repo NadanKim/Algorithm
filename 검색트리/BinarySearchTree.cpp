@@ -168,23 +168,31 @@ void BinarySearchTree::PrintBinarySearchTree()
 
 		PrintBinarySearchTree(node, lineWidth);
 
-		if (node->left != nullptr)
+		if (!node->isEmpty)
 		{
-			_queue.push(node->left);
-		}
-		else if (!node->isEmpty)
-		{
-			_queue.push(_nodeManager.GetEmptyNode(node));
-		}
-		if (node->right != nullptr)
-		{
-			_queue.push(node->right);
-		}
-		else if (!node->isEmpty)
-		{
-			_queue.push(_nodeManager.GetEmptyNode(node));
-		}
+			if (node->left != nullptr)
+			{
+				_queue.push(node->left);
+			}
+			else
+			{
+				BinarySearchNode* emptyNode{ _nodeManager.GetEmptyNode(node) };
+				emptyNode->left = node;
+				_queue.push(emptyNode);
+			}
 
+			if (node->right != nullptr)
+			{
+				_queue.push(node->right);
+			}
+			else
+			{
+				BinarySearchNode* emptyNode{ _nodeManager.GetEmptyNode(node) };
+				emptyNode->right = node;
+				_queue.push(emptyNode);
+			}
+		}
+		
 		if (node->isEmpty)
 		{
 			_nodeManager.Push(node);
@@ -397,35 +405,29 @@ string BinarySearchTree::GetNodeStick(BinarySearchNode* node, int blankSize)
 	int halfNodeWidth{ BinarySearchNode::Width / 2 };
 	int halfBlankSize{ blankSize / 2 };
 
-	if (node->isEmpty)
-	{
-		int stringLength{ BinarySearchNode::Width + blankSize };
-		return string(stringLength, ' ');
-	}
-
 	string result;
-	if (IsLeftNode(node))
+	if ((node->isEmpty && node->left != nullptr) || IsLeftNode(node))
 	{
 		int leftSpaceCnt{ blankSize + halfNodeWidth
 			- (BinarySearchNode::Width % 2 == 0 ? 1 : 0) };
 		result.append(string(leftSpaceCnt, ' '));
-		result.append("¦£");
+		result.append(node->isEmpty ? " " : "¦£");
 		int rightHypenCnt{ halfBlankSize + halfNodeWidth - 1 };
 		for (int i = 0; i < rightHypenCnt; i++)
 		{
-			result.append("¦¡");
+			result.append(node->isEmpty ? " " : "¦¡");
 		}
-		result.append("¦¥");
+		result.append(node->isEmpty ? " " : "¦¥");
 	}
 	else
 	{
-		result.append("¦¦");
+		result.append(node->isEmpty ? " " : "¦¦");
 		int leftHypenCnt{ halfBlankSize + halfNodeWidth - 1 };
 		for (int i = 0; i < leftHypenCnt; i++)
 		{
-			result.append("¦¡");
+			result.append(node->isEmpty ? " " : "¦¡");
 		}
-		result.append("¦¤");
+		result.append(node->isEmpty ? " " : "¦¤");
 		result.append(string(halfNodeWidth, ' '));
 	}
 

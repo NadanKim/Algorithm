@@ -54,7 +54,7 @@ struct BinarySearchNode
 	{
 		if (isEmpty)
 		{
-			return string(Width, '_');
+			return string(Width, ' ');
 		}
 
 		string dataStr = std::to_string(data);
