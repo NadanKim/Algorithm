@@ -15,13 +15,14 @@ struct BinarySearchNode
 {
 	const static int Width = 5;
 
-	BinarySearchNode() : isEmpty(false), data{ 0 }, parent{ nullptr },
+	BinarySearchNode() : isEmpty{ false }, data{ 0 }, parent{ nullptr },
 		left{ nullptr }, right{ nullptr } {}
-	BinarySearchNode(int data) : isEmpty(false), data{ data }, parent{ nullptr },
+	BinarySearchNode(int data) : isEmpty{ false }, data{ data }, parent{ nullptr },
 		left{ nullptr }, right{ nullptr } {}
 
 	void Clear()
 	{
+		isEmpty = false;
 		data = 0;
 		parent = nullptr;
 		left = nullptr;
@@ -109,14 +110,12 @@ private:
 	void Delete(BinarySearchNode* node);
 
 	void PrintBinarySearchTree(BinarySearchNode* node, int lineWidth);
+	string GetNodeStick(BinarySearchNode* node, int blankSize);
 
 	BinarySearchNode* GetNode(int data);
 
 	bool IsLeftNode(BinarySearchNode* node);
 	bool IsRightNode(BinarySearchNode* node);
-
-	int GetTreeMaxDepth();
-	string GetNodeStick(BinarySearchNode* node, int blankSize);
 
 private:
 	BinarySearchNode* _root;

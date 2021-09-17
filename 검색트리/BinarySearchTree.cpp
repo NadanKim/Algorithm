@@ -334,6 +334,50 @@ void BinarySearchTree::PrintBinarySearchTree(BinarySearchNode* node, int lineWid
 }
 
 /// <summary>
+/// 주어진 노드에 맞는 막대를 만들어 반환한다.
+/// </summary>
+/// <param name="node">처리할 노드</param>
+/// <returns>막대 노드 문자열</returns>
+string BinarySearchTree::GetNodeStick(BinarySearchNode* node, int blankSize)
+{
+	if (node == _root)
+	{
+		return "";
+	}
+
+	int halfNodeWidth{ BinarySearchNode::Width / 2 };
+	int halfBlankSize{ blankSize / 2 };
+
+	string result;
+	if ((node->isEmpty && node->left != nullptr) || IsLeftNode(node))
+	{
+		int leftSpaceCnt{ blankSize + halfNodeWidth
+			- (BinarySearchNode::Width % 2 == 0 ? 1 : 0) };
+		result.append(string(leftSpaceCnt, ' '));
+		result.append(node->isEmpty ? " " : "┌");
+		int rightHypenCnt{ halfBlankSize + halfNodeWidth - 1 };
+		for (int i = 0; i < rightHypenCnt; i++)
+		{
+			result.append(node->isEmpty ? " " : "─");
+		}
+		result.append(node->isEmpty ? " " : "┘");
+	}
+	else
+	{
+		result.append(node->isEmpty ? " " : "└");
+		int leftHypenCnt{ halfBlankSize + halfNodeWidth - 1 };
+		for (int i = 0; i < leftHypenCnt; i++)
+		{
+			result.append(node->isEmpty ? " " : "─");
+		}
+		result.append(node->isEmpty ? " " : "┐");
+		result.append(string(halfNodeWidth, ' '));
+	}
+
+	return result;
+}
+
+/// <summary>
 /// 주어진 값을 가진 노드의 포인터를 반환한다.
 /// </summary>
 /// <param name="data">찾으려는 값</param>
@@ -379,58 +423,5 @@ bool BinarySearchTree::IsLeftNode(BinarySearchNode* node)
 bool BinarySearchTree::IsRightNode(BinarySearchNode* node)
 {
 	return node->parent != nullptr && node->parent->right == node;
-}
-
-/// <summary>
-/// 트리의 최대 깊이를 반환한다.
-/// </summary>
-/// <returns>트리의 최대 깊이</returns>
-int BinarySearchTree::GetTreeMaxDepth()
-{
-	return _root != nullptr ? _root->GetMaxDepth() : 0;
-}
-
-/// <summary>
-/// 주어진 노드에 맞는 막대를 만들어 반환한다.
-/// </summary>
-/// <param name="node">처리할 노드</param>
-/// <returns>막대 노드 문자열</returns>
-string BinarySearchTree::GetNodeStick(BinarySearchNode* node, int blankSize)
-{
-	if (node == _root)
-	{
-		return "";
-	}
-
-	int halfNodeWidth{ BinarySearchNode::Width / 2 };
-	int halfBlankSize{ blankSize / 2 };
-
-	string result;
-	if ((node->isEmpty && node->left != nullptr) || IsLeftNode(node))
-	{
-		int leftSpaceCnt{ blankSize + halfNodeWidth
-			- (BinarySearchNode::Width % 2 == 0 ? 1 : 0) };
-		result.append(string(leftSpaceCnt, ' '));
-		result.append(node->isEmpty ? " " : "┌");
-		int rightHypenCnt{ halfBlankSize + halfNodeWidth - 1 };
-		for (int i = 0; i < rightHypenCnt; i++)
-		{
-			result.append(node->isEmpty ? " " : "─");
-		}
-		result.append(node->isEmpty ? " " : "┘");
-	}
-	else
-	{
-		result.append(node->isEmpty ? " " : "└");
-		int leftHypenCnt{ halfBlankSize + halfNodeWidth - 1 };
-		for (int i = 0; i < leftHypenCnt; i++)
-		{
-			result.append(node->isEmpty ? " " : "─");
-		}
-		result.append(node->isEmpty ? " " : "┐");
-		result.append(string(halfNodeWidth, ' '));
-	}
-
-	return result;
 }
 #pragma endregion

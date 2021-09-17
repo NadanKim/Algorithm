@@ -56,6 +56,20 @@ RedBlackNode* RedBlackNodeManager::Pop()
 
 	return node;
 }
+
+/// <summary>
+/// 주어진 노드를 부모로 하는 공백 노드를 반환한다.
+/// </summary>
+/// <param name="parent">부모 노드</param>
+/// <returns>공백 노드</returns>
+RedBlackNode* RedBlackNodeManager ::GetEmptyNode(RedBlackNode* parent)
+{
+	RedBlackNode* emptyNode = Pop();
+	emptyNode->parent = parent;
+	emptyNode->isEmpty = true;
+
+	return emptyNode;
+}
 #pragma endregion
 
 #pragma region 레드 블랙 트리
@@ -89,9 +103,14 @@ RedBlackTree::~RedBlackTree()
 /// <returns>존재 여부</returns>
 bool RedBlackTree::Exists(int data)
 {
+	if (_root == nullptr)
+	{
+		return false;
+	}
+
 	RedBlackNode* node{ _root };
 
-	while (node != nullptr)
+	while (node != _nil)
 	{
 		if (node->data == data)
 		{
@@ -149,6 +168,75 @@ void RedBlackTree::Delete(int data)
 }
 
 /// <summary>
+/// 레드 블랙 트리를 출력한다.
+/// </summary>
+void RedBlackTree::PrintBinarySearchTree()
+{
+	if (_root == nullptr)
+	{
+		std::cout << "EMPTY\n";
+		return;
+	}
+
+	int maxDepth{ _root->GetMaxDepth() };
+	int maxNodeCount{ static_cast<int>(std::pow(2, maxDepth - 1)) };
+	int totalCount{ maxNodeCount * 2 + 1 };
+	int lineWidth{ totalCount * RedBlackNode::Width };
+
+	for (int i = 1; i <= maxDepth; i++)
+	{
+		_numberMap[i] = "";
+		_stickMap[i] = "";
+	}
+
+	_queue.push(_root);
+	while (!_queue.empty())
+	{
+		RedBlackNode* node{ _queue.front() };
+		_queue.pop();
+
+		PrintBinarySearchTree(node, lineWidth);
+
+		if (!node->isEmpty)
+		{
+			if (node->left != _nil)
+			{
+				_queue.push(node->left);
+			}
+			else
+			{
+				RedBlackNode* emptyNode{ _nodeManager->GetEmptyNode(node) };
+				emptyNode->left = node;
+				_queue.push(emptyNode);
+			}
+
+			if (node->right != _nil)
+			{
+				_queue.push(node->right);
+			}
+			else
+			{
+				RedBlackNode* emptyNode{ _nodeManager->GetEmptyNode(node) };
+				emptyNode->right = node;
+				_queue.push(emptyNode);
+			}
+		}
+
+		if (node->isEmpty)
+		{
+			_nodeManager->Push(node);
+		}
+	}
+
+	for (int i = 1; i <= maxDepth; i++)
+	{
+		std::cout << _stickMap[i] << '\n';
+		std::cout << _numberMap[i] << '\n';
+	}
+	std::cout << "\n\n";
+}
+
+/// <summary>
 /// 레드 블랙 트리 삽입 처리
 /// </summary>
 /// <param name="parent">삽입해야 할 노드의 부모</param>
@@ -166,7 +254,7 @@ RedBlackNode* RedBlackTree::Insert(RedBlackNode* parent, int data)
 	}
 	else if (parent->data > data)
 	{
-		if (parent->left == nullptr)
+		if (parent->left == _nil)
 		{
 			RedBlackNode* node{ _nodeManager->Pop() };
 			node->data = data;
@@ -182,7 +270,7 @@ RedBlackNode* RedBlackTree::Insert(RedBlackNode* parent, int data)
 	}
 	else
 	{
-		if (parent->right == nullptr)
+		if (parent->right == _nil)
 		{
 			RedBlackNode* node{ _nodeManager->Pop() };
 			node->data = data;
@@ -410,19 +498,89 @@ void RedBlackTree::AdjustDeletedNode(RedBlackNode* node)
 }
 
 /// <summary>
+/// 이진 검색 트리를 출력한다.
+/// </summary>
+/// <param name="node">현재 출력할 노드</param>
+void RedBlackTree::PrintBinarySearchTree(RedBlackNode* node, int lineWidth)
+{
+	int curDepth{ node->GetCurDepth() };
+	int curNodeCount{ static_cast<int>(std::pow(2, curDepth - 1)) };
+	int totalNodeSize{ curNodeCount * RedBlackNode::Width };
+	int blankCount{ curNodeCount + 1 };
+	int totalBlankSize{ lineWidth - totalNodeSize };
+	int blankSize{ totalBlankSize / blankCount };
+
+	string& numberStr{ _numberMap[curDepth] };
+	numberStr.append(string(blankSize, ' '));
+	numberStr.append(node->ToString());
+
+	string& stickStr{ _stickMap[curDepth] };
+	stickStr.append(GetNodeStick(node, blankSize));
+}
+
+/// <summary>
+/// 주어진 노드에 맞는 막대를 만들어 반환한다.
+/// </summary>
+/// <param name="node">처리할 노드</param>
+/// <returns>막대 노드 문자열</returns>
+string RedBlackTree::GetNodeStick(RedBlackNode* node, int blankSize)
+{
+	if (node == _root)
+	{
+		return "";
+	}
+
+	int halfNodeWidth{ RedBlackNode::Width / 2 };
+	int halfBlankSize{ blankSize / 2 };
+
+	string result;
+	if ((node->isEmpty && node->left != nullptr) || IsLeftNode(node))
+	{
+		int leftSpaceCnt{ blankSize + halfNodeWidth
+			- (RedBlackNode::Width % 2 == 0 ? 1 : 0) };
+		result.append(string(leftSpaceCnt, ' '));
+		result.append(node->isEmpty ? " " : "┌");
+		int rightHypenCnt{ halfBlankSize + halfNodeWidth - 1 };
+		for (int i = 0; i < rightHypenCnt; i++)
+		{
+			result.append(node->isEmpty ? " " : "─");
+		}
+		result.append(node->isEmpty ? " " : "┘");
+	}
+	else
+	{
+		result.append(node->isEmpty ? " " : "└");
+		int leftHypenCnt{ halfBlankSize + halfNodeWidth - 1 };
+		for (int i = 0; i < leftHypenCnt; i++)
+		{
+			result.append(node->isEmpty ? " " : "─");
+		}
+		result.append(node->isEmpty ? " " : "┐");
+		result.append(string(halfNodeWidth, ' '));
+	}
+
+	return result;
+}
+
+/// <summary>
 /// 주어진 값을 가진 노드의 포인터를 반환한다.
 /// </summary>
 /// <param name="data">찾으려는 값</param>
 /// <returns>노드의 포인터</returns>
 RedBlackNode* RedBlackTree::GetNode(int data)
 {
+	if (_root == nullptr)
+	{
+		return nullptr;
+	}
+
 	RedBlackNode* node{ _root };
 
-	while (node != nullptr)
+	while (node != _nil)
 	{
 		if (node->data == data)
 		{
-			break;
+			return node;
 		}
 		else if (node->data > data)
 		{
@@ -434,7 +592,7 @@ RedBlackNode* RedBlackTree::GetNode(int data)
 		}
 	}
 
-	return node;
+	return nullptr;
 }
 
 /// <summary>
@@ -505,5 +663,14 @@ void RedBlackTree::RotateRight(RedBlackNode* node)
 		_root = x;
 	}
 	x->parent = p2;
+}
+
+/// <summary>
+/// 트리의 최대 깊이를 반환한다.
+/// </summary>
+/// <returns>트리의 최대 깊이</returns>
+int RedBlackTree::GetTreeMaxDepth()
+{
+	return _root != nullptr ? _root->GetMaxDepth() : 0;
 }
 #pragma endregion

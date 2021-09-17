@@ -1,5 +1,12 @@
 #pragma once
 #include "../Common.h"
+#include <string>
+#include <queue>
+#include <map>
+
+using std::string;
+using std::queue;
+using std::map;
 
 enum class NodeColor
 {
@@ -12,13 +19,16 @@ enum class NodeColor
 /// </summary>
 struct RedBlackNode
 {
-	RedBlackNode() : data{ 0 }, color{ NodeColor::Red }, parent{ nullptr },
+	const static int Width = 8; // NodeSize = 5, ColorSize = 3
+
+	RedBlackNode() : isEmpty{ false }, data { 0 }, color{ NodeColor::Red }, parent{ nullptr },
 		left{ nullptr }, right{ nullptr } {}
-	RedBlackNode(int data) : data{ data }, color{ NodeColor::Red }, parent{ nullptr },
+	RedBlackNode(int data) : isEmpty{ false }, data{ data }, color{ NodeColor::Red }, parent{ nullptr },
 		left{ nullptr }, right{ nullptr } {}
 
 	void Clear()
 	{
+		isEmpty = false;
 		data = 0;
 		parent = nullptr;
 		left = nullptr;
@@ -50,6 +60,47 @@ struct RedBlackNode
 		color = temp;
 	}
 
+	int GetMaxDepth()
+	{
+		int leftMaxDepth{ left != nullptr ? left->GetMaxDepth() : 0 };
+		int rightMaxDpth{ right != nullptr ? right->GetMaxDepth() : 0 };
+		return (leftMaxDepth > rightMaxDpth ? leftMaxDepth : rightMaxDpth) + 1;
+	}
+
+	int GetCurDepth()
+	{
+		return (parent != nullptr ? parent->GetCurDepth() : 0) + 1;
+	}
+
+	bool HasLeftChild()
+	{
+		return left != nullptr;
+	}
+
+	bool HasRightChild()
+	{
+		return right != nullptr;
+	}
+
+	string ToString()
+	{
+		if (isEmpty)
+		{
+			return string(Width, ' ');
+		}
+
+		string dataStr = std::to_string(data);
+		size_t spaceCnt = Width - dataStr.size();
+		size_t leftSpaceCnt = spaceCnt / 2;
+		size_t rightSpaceCnt = spaceCnt / 2 + spaceCnt % 2;
+
+		string colorText = (color == NodeColor::Black ? "R" : "B");
+
+		return string(leftSpaceCnt, '_') + dataStr + string(rightSpaceCnt, '_') + "(" + colorText + ")";
+	}
+
+	bool isEmpty;
+
 	int data;
 	NodeColor color;
 	RedBlackNode* parent;
@@ -68,6 +119,7 @@ public:
 
 	void Push(RedBlackNode* node);
 	RedBlackNode* Pop();
+	RedBlackNode* GetEmptyNode(RedBlackNode* parent);
 
 private:
 	RedBlackNode* _nil;
@@ -88,12 +140,17 @@ public:
 	void Insert(int data);
 	void Delete(int data);
 
+	void PrintBinarySearchTree();
+
 private:
 	RedBlackNode* Insert(RedBlackNode* parent, int data);
 	void AdjustInsertedNode(RedBlackNode* node);
 
 	RedBlackNode* Delete(RedBlackNode* node);
 	void AdjustDeletedNode(RedBlackNode* node);
+
+	void PrintBinarySearchTree(RedBlackNode* node, int lineWidth);
+	string GetNodeStick(RedBlackNode* node, int blankSize);
 
 	RedBlackNode* GetNode(int data);
 
@@ -103,8 +160,13 @@ private:
 	void RotateLeft(RedBlackNode* node);
 	void RotateRight(RedBlackNode* node);
 
+	int GetTreeMaxDepth();
+
 private:
 	RedBlackNode* _root;
 	RedBlackNode* _nil;
 	RedBlackNodeManager* _nodeManager;
+	queue<RedBlackNode*> _queue;
+	map<int, string> _numberMap;
+	map<int, string> _stickMap;
 };
