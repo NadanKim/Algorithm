@@ -103,13 +103,13 @@ public:
 	void Insert(int data);
 	void Delete(int data);
 
-	void PrintBinarySearchTree();
+	void PrintTree();
 
 private:
 	void Insert(BinarySearchNode* parent, int data);
 	void Delete(BinarySearchNode* node);
 
-	void PrintBinarySearchTree(BinarySearchNode* node, int lineWidth);
+	void PrintTree(BinarySearchNode* node, int lineWidth);
 	string GetNodeStick(BinarySearchNode* node, int blankSize);
 
 	BinarySearchNode* GetNode(int data);

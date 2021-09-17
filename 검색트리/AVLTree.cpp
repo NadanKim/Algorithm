@@ -44,6 +44,20 @@ AVLNode* AVLNodeManager::Pop()
 
 	return node;
 }
+
+/// <summary>
+/// 주어진 노드를 부모로 하는 공백 노드를 반환한다.
+/// </summary>
+/// <param name="parent">부모 노드</param>
+/// <returns>공백 노드</returns>
+AVLNode* AVLNodeManager::GetEmptyNode(AVLNode* parent)
+{
+	AVLNode* emptyNode = Pop();
+	emptyNode->parent = parent;
+	emptyNode->isEmpty = true;
+
+	return emptyNode;
+}
 #pragma endregion
 
 #pragma region AVL트리
@@ -124,6 +138,75 @@ void AVLTree::Delete(int data)
 
 	Delete(GetNode(data));
 	CalculateBalaceFactor(_root);
+}
+
+/// <summary>
+/// 이진 검색 트리를 출력한다.
+/// </summary>
+void AVLTree::PrintTree()
+{
+	if (_root == nullptr)
+	{
+		std::cout << "EMPTY\n";
+		return;
+	}
+
+	int maxDepth{ _root->GetMaxDepth() };
+	int maxNodeCount{ static_cast<int>(std::pow(2, maxDepth - 1)) };
+	int totalCount{ maxNodeCount * 2 + 1 };
+	int lineWidth{ totalCount * AVLNode::Width };
+
+	for (int i = 1; i <= maxDepth; i++)
+	{
+		_numberMap[i] = "";
+		_stickMap[i] = "";
+	}
+
+	_queue.push(_root);
+	while (!_queue.empty())
+	{
+		AVLNode* node{ _queue.front() };
+		_queue.pop();
+
+		PrintTree(node, lineWidth);
+
+		if (!node->isEmpty)
+		{
+			if (node->left != nullptr)
+			{
+				_queue.push(node->left);
+			}
+			else
+			{
+				AVLNode* emptyNode{ _nodeManager.GetEmptyNode(node) };
+				emptyNode->left = node;
+				_queue.push(emptyNode);
+			}
+
+			if (node->right != nullptr)
+			{
+				_queue.push(node->right);
+			}
+			else
+			{
+				AVLNode* emptyNode{ _nodeManager.GetEmptyNode(node) };
+				emptyNode->right = node;
+				_queue.push(emptyNode);
+			}
+		}
+
+		if (node->isEmpty)
+		{
+			_nodeManager.Push(node);
+		}
+	}
+
+	for (int i = 1; i <= maxDepth; i++)
+	{
+		std::cout << _stickMap[i] << '\n';
+		std::cout << _numberMap[i] << '\n';
+	}
+	std::cout << "\n\n";
 }
 
 /// <summary>
@@ -229,6 +312,71 @@ void AVLTree::Delete(AVLNode* node)
 		node->data = child->data;
 		Delete(child);
 	}
+}
+
+/// <summary>
+/// 트리를 출력한다.
+/// </summary>
+/// <param name="node">현재 출력할 노드</param>
+void AVLTree::PrintTree(AVLNode* node, int lineWidth)
+{
+	int curDepth{ node->GetCurDepth() };
+	int curNodeCount{ static_cast<int>(std::pow(2, curDepth - 1)) };
+	int totalNodeSize{ curNodeCount * AVLNode::Width };
+	int blankCount{ curNodeCount + 1 };
+	int totalBlankSize{ lineWidth - totalNodeSize };
+	int blankSize{ totalBlankSize / blankCount };
+
+	string& numberStr{ _numberMap[curDepth] };
+	numberStr.append(string(blankSize, ' '));
+	numberStr.append(node->ToString());
+
+	string& stickStr{ _stickMap[curDepth] };
+	stickStr.append(GetNodeStick(node, blankSize));
+}
+
+/// <summary>
+/// 주어진 노드에 맞는 막대를 만들어 반환한다.
+/// </summary>
+/// <param name="node">처리할 노드</param>
+/// <returns>막대 노드 문자열</returns>
+string AVLTree::GetNodeStick(AVLNode* node, int blankSize)
+{
+	if (node == _root)
+	{
+		return "";
+	}
+
+	int halfNodeWidth{ AVLNode::Width / 2 };
+	int halfBlankSize{ blankSize / 2 };
+
+	string result;
+	if ((node->isEmpty && node->left != nullptr) || IsLeftNode(node))
+	{
+		int leftSpaceCnt{ blankSize + halfNodeWidth
+			- (AVLNode::Width % 2 == 0 ? 1 : 0) };
+		result.append(string(leftSpaceCnt, ' '));
+		result.append(node->isEmpty ? " " : "┌");
+		int rightHypenCnt{ halfBlankSize + halfNodeWidth - 1 };
+		for (int i = 0; i < rightHypenCnt; i++)
+		{
+			result.append(node->isEmpty ? " " : "─");
+		}
+		result.append(node->isEmpty ? " " : "┘");
+	}
+	else
+	{
+		result.append(node->isEmpty ? " " : "└");
+		int leftHypenCnt{ halfBlankSize + halfNodeWidth - 1 };
+		for (int i = 0; i < leftHypenCnt; i++)
+		{
+			result.append(node->isEmpty ? " " : "─");
+		}
+		result.append(node->isEmpty ? " " : "┐");
+		result.append(string(halfNodeWidth, ' '));
+	}
+
+	return result;
 }
 
 /// <summary>

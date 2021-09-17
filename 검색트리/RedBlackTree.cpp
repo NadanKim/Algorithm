@@ -168,9 +168,9 @@ void RedBlackTree::Delete(int data)
 }
 
 /// <summary>
-/// 레드 블랙 트리를 출력한다.
+/// 트리를 출력한다.
 /// </summary>
-void RedBlackTree::PrintBinarySearchTree()
+void RedBlackTree::PrintTree()
 {
 	if (_root == nullptr)
 	{
@@ -195,7 +195,7 @@ void RedBlackTree::PrintBinarySearchTree()
 		RedBlackNode* node{ _queue.front() };
 		_queue.pop();
 
-		PrintBinarySearchTree(node, lineWidth);
+		PrintTree(node, lineWidth);
 
 		if (!node->isEmpty)
 		{
@@ -498,10 +498,10 @@ void RedBlackTree::AdjustDeletedNode(RedBlackNode* node)
 }
 
 /// <summary>
-/// 이진 검색 트리를 출력한다.
+/// 트리를 출력한다.
 /// </summary>
 /// <param name="node">현재 출력할 노드</param>
-void RedBlackTree::PrintBinarySearchTree(RedBlackNode* node, int lineWidth)
+void RedBlackTree::PrintTree(RedBlackNode* node, int lineWidth)
 {
 	int curDepth{ node->GetCurDepth() };
 	int curNodeCount{ static_cast<int>(std::pow(2, curDepth - 1)) };

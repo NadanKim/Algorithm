@@ -141,7 +141,7 @@ void BinarySearchTree::Delete(int data)
 /// <summary>
 /// 이진 검색 트리를 출력한다.
 /// </summary>
-void BinarySearchTree::PrintBinarySearchTree()
+void BinarySearchTree::PrintTree()
 {
 	if (_root == nullptr)
 	{
@@ -166,7 +166,7 @@ void BinarySearchTree::PrintBinarySearchTree()
 		BinarySearchNode* node{ _queue.front() };
 		_queue.pop();
 
-		PrintBinarySearchTree(node, lineWidth);
+		PrintTree(node, lineWidth);
 
 		if (!node->isEmpty)
 		{
@@ -313,10 +313,10 @@ void BinarySearchTree::Delete(BinarySearchNode* node)
 }
 
 /// <summary>
-/// 이진 검색 트리를 출력한다.
+/// 트리를 출력한다.
 /// </summary>
 /// <param name="node">현재 출력할 노드</param>
-void BinarySearchTree::PrintBinarySearchTree(BinarySearchNode* node, int lineWidth)
+void BinarySearchTree::PrintTree(BinarySearchNode* node, int lineWidth)
 {
 	int curDepth{ node->GetCurDepth() };
 	int curNodeCount{ static_cast<int>(std::pow(2, curDepth - 1)) };

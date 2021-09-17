@@ -19,7 +19,10 @@ enum class NodeColor
 /// </summary>
 struct RedBlackNode
 {
-	const static int Width = 8; // NodeSize = 5, ColorSize = 3
+	const static int NodeSize = 5;
+	const static int ColorSize = 3;
+	// NodeSize + ColorSize
+	const static int Width = 8;
 
 	RedBlackNode() : isEmpty{ false }, data { 0 }, color{ NodeColor::Red }, parent{ nullptr },
 		left{ nullptr }, right{ nullptr } {}
@@ -90,7 +93,7 @@ struct RedBlackNode
 		}
 
 		string dataStr = std::to_string(data);
-		size_t spaceCnt = Width - dataStr.size();
+		size_t spaceCnt = NodeSize - dataStr.size();
 		size_t leftSpaceCnt = spaceCnt / 2;
 		size_t rightSpaceCnt = spaceCnt / 2 + spaceCnt % 2;
 
@@ -140,7 +143,7 @@ public:
 	void Insert(int data);
 	void Delete(int data);
 
-	void PrintBinarySearchTree();
+	void PrintTree();
 
 private:
 	RedBlackNode* Insert(RedBlackNode* parent, int data);
@@ -149,7 +152,7 @@ private:
 	RedBlackNode* Delete(RedBlackNode* node);
 	void AdjustDeletedNode(RedBlackNode* node);
 
-	void PrintBinarySearchTree(RedBlackNode* node, int lineWidth);
+	void PrintTree(RedBlackNode* node, int lineWidth);
 	string GetNodeStick(RedBlackNode* node, int blankSize);
 
 	RedBlackNode* GetNode(int data);
