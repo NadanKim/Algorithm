@@ -65,8 +65,8 @@ struct RedBlackNode
 
 	int GetMaxDepth()
 	{
-		int leftMaxDepth{ left != nullptr ? left->GetMaxDepth() : 0 };
-		int rightMaxDpth{ right != nullptr ? right->GetMaxDepth() : 0 };
+		int leftMaxDepth{ !left->isEmpty ? left->GetMaxDepth() : 0 };
+		int rightMaxDpth{ !right->isEmpty ? right->GetMaxDepth() : 0 };
 		return (leftMaxDepth > rightMaxDpth ? leftMaxDepth : rightMaxDpth) + 1;
 	}
 
@@ -97,7 +97,7 @@ struct RedBlackNode
 		size_t leftSpaceCnt = spaceCnt / 2;
 		size_t rightSpaceCnt = spaceCnt / 2 + spaceCnt % 2;
 
-		string colorText = (color == NodeColor::Black ? "R" : "B");
+		string colorText = (color == NodeColor::Black ? "B" : "R");
 
 		return string(leftSpaceCnt, '_') + dataStr + string(rightSpaceCnt, '_') + "(" + colorText + ")";
 	}
@@ -117,8 +117,10 @@ struct RedBlackNode
 class RedBlackNodeManager
 {
 public:
-	RedBlackNodeManager(RedBlackNode* nil);
+	RedBlackNodeManager() : _nil(nullptr), _nodes(nullptr) {}
 	~RedBlackNodeManager();
+
+	void RegisterNilNode(RedBlackNode* nil);
 
 	void Push(RedBlackNode* node);
 	RedBlackNode* Pop();
@@ -167,8 +169,8 @@ private:
 
 private:
 	RedBlackNode* _root;
-	RedBlackNode* _nil;
-	RedBlackNodeManager* _nodeManager;
+	RedBlackNode _nil;
+	RedBlackNodeManager _nodeManager;
 	queue<RedBlackNode*> _queue;
 	map<int, string> _numberMap;
 	map<int, string> _stickMap;

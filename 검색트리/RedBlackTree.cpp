@@ -2,15 +2,6 @@
 
 #pragma region 노드 매니저
 /// <summary>
-/// 레드 블랙 노드의 매니저에 nil 노드 등록
-/// </summary>
-/// <param name="nil">nil 노드</param>
-RedBlackNodeManager::RedBlackNodeManager(RedBlackNode* nil)
-	: _nil(nil), _nodes(nullptr)
-{
-}
-
-/// <summary>
 /// 종료 전 생성하 노드 제거
 /// </summary>
 RedBlackNodeManager::~RedBlackNodeManager()
@@ -21,6 +12,15 @@ RedBlackNodeManager::~RedBlackNodeManager()
 		_nodes = _nodes->left;
 		delete temp;
 	}
+}
+
+/// <summary>
+/// Nil 노드를 등록한다.
+/// </summary>
+/// <param name="nil">Nil 노드</param>
+void RedBlackNodeManager::RegisterNilNode(RedBlackNode* nil)
+{
+	_nil = nil;
 }
 
 /// <summary>
@@ -79,10 +79,10 @@ RedBlackNode* RedBlackNodeManager ::GetEmptyNode(RedBlackNode* parent)
 RedBlackTree::RedBlackTree()
 	: _root(nullptr)
 {
-	_nil = new RedBlackNode();
-	_nil->color = NodeColor::Black;
+	_nil.color = NodeColor::Black;
+	_nil.isEmpty = true;
 
-	_nodeManager = new RedBlackNodeManager(_nil);
+	_nodeManager.RegisterNilNode(&_nil);
 }
 
 /// <summary>
@@ -110,7 +110,7 @@ bool RedBlackTree::Exists(int data)
 
 	RedBlackNode* node{ _root };
 
-	while (node != _nil)
+	while (node != &_nil)
 	{
 		if (node->data == data)
 		{
@@ -199,24 +199,24 @@ void RedBlackTree::PrintTree()
 
 		if (!node->isEmpty)
 		{
-			if (node->left != _nil)
+			if (node->left != &_nil)
 			{
 				_queue.push(node->left);
 			}
 			else
 			{
-				RedBlackNode* emptyNode{ _nodeManager->GetEmptyNode(node) };
+				RedBlackNode* emptyNode{ _nodeManager.GetEmptyNode(node) };
 				emptyNode->left = node;
 				_queue.push(emptyNode);
 			}
 
-			if (node->right != _nil)
+			if (node->right != &_nil)
 			{
 				_queue.push(node->right);
 			}
 			else
 			{
-				RedBlackNode* emptyNode{ _nodeManager->GetEmptyNode(node) };
+				RedBlackNode* emptyNode{ _nodeManager.GetEmptyNode(node) };
 				emptyNode->right = node;
 				_queue.push(emptyNode);
 			}
@@ -224,7 +224,7 @@ void RedBlackTree::PrintTree()
 
 		if (node->isEmpty)
 		{
-			_nodeManager->Push(node);
+			_nodeManager.Push(node);
 		}
 	}
 
@@ -246,7 +246,7 @@ RedBlackNode* RedBlackTree::Insert(RedBlackNode* parent, int data)
 {
 	if (parent == nullptr)
 	{
-		RedBlackNode* node{ _nodeManager->Pop() };
+		RedBlackNode* node{ _nodeManager.Pop() };
 		node->data = data;
 		_root = node;
 
@@ -254,9 +254,9 @@ RedBlackNode* RedBlackTree::Insert(RedBlackNode* parent, int data)
 	}
 	else if (parent->data > data)
 	{
-		if (parent->left == _nil)
+		if (parent->left == &_nil)
 		{
-			RedBlackNode* node{ _nodeManager->Pop() };
+			RedBlackNode* node{ _nodeManager.Pop() };
 			node->data = data;
 			node->parent = parent;
 			parent->left = node;
@@ -270,9 +270,9 @@ RedBlackNode* RedBlackTree::Insert(RedBlackNode* parent, int data)
 	}
 	else
 	{
-		if (parent->right == _nil)
+		if (parent->right == &_nil)
 		{
-			RedBlackNode* node{ _nodeManager->Pop() };
+			RedBlackNode* node{ _nodeManager.Pop() };
 			node->data = data;
 			node->parent = parent;
 			parent->right = node;
@@ -295,7 +295,13 @@ void RedBlackTree::AdjustInsertedNode(RedBlackNode* node)
 	RedBlackNode* x{ node };
 	RedBlackNode* p{ x->parent };
 
-	if (x == _root || p->color == NodeColor::Black)
+	if (x == _root)
+	{
+		x->color = NodeColor::Black;
+		return;
+	}
+
+	if (p->color == NodeColor::Black)
 	{
 		return;
 	}
@@ -309,14 +315,7 @@ void RedBlackTree::AdjustInsertedNode(RedBlackNode* node)
 	{
 		p->color = s->color = NodeColor::Black;
 		p2->color = NodeColor::Red;
-		if (p2 == _root)
-		{
-			p2->color = NodeColor::Red;
-		}
-		else
-		{
-			AdjustInsertedNode(p2);
-		}
+		AdjustInsertedNode(p2);
 	}
 	else
 	{
@@ -347,17 +346,17 @@ RedBlackNode* RedBlackTree::Delete(RedBlackNode* node)
 	RedBlackNode* parent{ node->parent };
 	RedBlackNode* x{ nullptr };
 
-	if (node->left == _nil && node->right == _nil)
+	if (node->left == &_nil && node->right == &_nil)
 	{
 		if (IsLeftNode(node))
 		{
-			parent->left = _nil;
-			_nil->parent = parent;
+			parent->left = &_nil;
+			_nil.parent = parent;
 		}
 		else if (IsRightNode(node))
 		{
-			parent->right = _nil;
-			_nil->parent = parent;
+			parent->right = &_nil;
+			_nil.parent = parent;
 		}
 		else
 		{
@@ -366,16 +365,16 @@ RedBlackNode* RedBlackTree::Delete(RedBlackNode* node)
 
 		if (node->color == NodeColor::Black)
 		{
-			x = _nil;
+			x = &_nil;
 		}
 
-		_nodeManager->Push(node);
+		_nodeManager.Push(node);
 	}
-	else if (node->left != _nil && node->right == _nil ||
-		node->left == _nil && node->right != _nil)
+	else if (node->left != &_nil && node->right == &_nil ||
+		node->left == &_nil && node->right != &_nil)
 	{
 		RedBlackNode* child{ node->left };
-		if (child == _nil)
+		if (child == &_nil)
 		{
 			child = node->right;
 		}
@@ -402,12 +401,12 @@ RedBlackNode* RedBlackTree::Delete(RedBlackNode* node)
 			x = child;
 		}
 
-		_nodeManager->Push(node);
+		_nodeManager.Push(node);
 	}
 	else
 	{
 		RedBlackNode* child{ node->right };
-		while (child->left != _nil)
+		while (child->left != &_nil)
 		{
 			child = child->left;
 		}
@@ -494,7 +493,7 @@ void RedBlackTree::AdjustDeletedNode(RedBlackNode* node)
 		AdjustDeletedNode(x);
 	}
 	
-	_nil->parent = nullptr;
+	_nil.parent = nullptr;
 }
 
 /// <summary>
@@ -509,6 +508,13 @@ void RedBlackTree::PrintTree(RedBlackNode* node, int lineWidth)
 	int blankCount{ curNodeCount + 1 };
 	int totalBlankSize{ lineWidth - totalNodeSize };
 	int blankSize{ totalBlankSize / blankCount };
+
+	if (curDepth == 3)
+	{
+		std::cout << "curNodeCnt: " << curNodeCount << ' ' << "totalNodeSize: " << totalNodeSize << '\n'
+			<< "blackCount: " << blankCount << ' ' << "totalBlankCount: " << totalBlankSize << '\n'
+			<< "blankSize: " << blankSize << '\n';
+	}
 
 	string& numberStr{ _numberMap[curDepth] };
 	numberStr.append(string(blankSize, ' '));
@@ -559,6 +565,12 @@ string RedBlackTree::GetNodeStick(RedBlackNode* node, int blankSize)
 		result.append(string(halfNodeWidth, ' '));
 	}
 
+	int curDepth{ node->GetCurDepth() };
+	if (curDepth == 3)
+	{
+		std::cout << "result: |" << result << "|\n\n";
+	}
+
 	return result;
 }
 
@@ -576,7 +588,7 @@ RedBlackNode* RedBlackTree::GetNode(int data)
 
 	RedBlackNode* node{ _root };
 
-	while (node != _nil)
+	while (node != &_nil)
 	{
 		if (node->data == data)
 		{

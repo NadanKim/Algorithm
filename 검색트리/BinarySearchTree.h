@@ -13,7 +13,7 @@ using std::map;
 /// </summary>
 struct BinarySearchNode
 {
-	const static int Width = 5;
+	const static int Width = 8;
 
 	BinarySearchNode() : isEmpty{ false }, data{ 0 }, parent{ nullptr },
 		left{ nullptr }, right{ nullptr } {}
