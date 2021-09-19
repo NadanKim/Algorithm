@@ -405,13 +405,13 @@ RedBlackNode* RedBlackTree::Delete(RedBlackNode* node)
 	}
 	else
 	{
-		RedBlackNode* child{ node->right };
-		while (child->left != &_nil)
+		RedBlackNode* child{ node->left };
+		while (child->right != &_nil)
 		{
-			child = child->left;
+			child = child->right;
 		}
 		node->data = child->data;
-		Delete(child);
+		return Delete(child);
 	}
 
 	return x;
@@ -440,35 +440,36 @@ void RedBlackTree::AdjustDeletedNode(RedBlackNode* node)
 	{
 		p->SwapColor(s);
 	}
-	// case *-2
-	else if (s->color == NodeColor::Black && r->color == NodeColor::Red)
+	// case *-2 x가 왼쪽
+	else if (s->color == NodeColor::Black && IsLeftNode(x) &&
+		r->color == NodeColor::Red)
 	{
-		if (IsLeftNode(x))
-		{
-			RotateLeft(p);
-			r->color = NodeColor::Black;
-		}
-		else
-		{
-			RotateRight(p);
-			l->color = NodeColor::Black;
-		}
+		RotateLeft(p);
+		r->color = NodeColor::Black;
 		p->SwapColor(s);
 	}
-	// case *-3
-	else if (s->color == NodeColor::Black && 
+	// case *-2 x가 오른쪽
+	else if (s->color == NodeColor::Black && IsRightNode(x) &&
+		l->color == NodeColor::Red)
+	{
+		RotateRight(p);
+		l->color = NodeColor::Black;
+		p->SwapColor(s);
+	}
+	// case *-3 x가 왼쪽
+	else if (s->color == NodeColor::Black && IsLeftNode(x) &&
 		l->color == NodeColor::Red && r->color == NodeColor::Black)
 	{
-		if (IsLeftNode(x))
-		{
-			RotateRight(s);
-			l->SwapColor(s);
-		}
-		else
-		{
-			RotateLeft(s);
-			r->SwapColor(s);
-		}
+		RotateRight(s);
+		l->SwapColor(s);
+		AdjustDeletedNode(x);
+	}
+	// case *-3 x가 오른쪽
+	else if (s->color == NodeColor::Black && IsRightNode(x) &&
+		l->color == NodeColor::Black && r->color == NodeColor::Red)
+	{
+		RotateLeft(s);
+		r->SwapColor(s);
 		AdjustDeletedNode(x);
 	}
 	// case 2-1
@@ -509,13 +510,6 @@ void RedBlackTree::PrintTree(RedBlackNode* node, int lineWidth)
 	int totalBlankSize{ lineWidth - totalNodeSize };
 	int blankSize{ totalBlankSize / blankCount };
 
-	if (curDepth == 3)
-	{
-		std::cout << "curNodeCnt: " << curNodeCount << ' ' << "totalNodeSize: " << totalNodeSize << '\n'
-			<< "blackCount: " << blankCount << ' ' << "totalBlankCount: " << totalBlankSize << '\n'
-			<< "blankSize: " << blankSize << '\n';
-	}
-
 	string& numberStr{ _numberMap[curDepth] };
 	numberStr.append(string(blankSize, ' '));
 	numberStr.append(node->ToString());
@@ -540,7 +534,7 @@ string RedBlackTree::GetNodeStick(RedBlackNode* node, int blankSize)
 	int halfBlankSize{ blankSize / 2 };
 
 	string result;
-	if ((node->isEmpty && node->left != nullptr) || IsLeftNode(node))
+	if ((node->isEmpty && node->left != &_nil) || IsLeftNode(node))
 	{
 		int leftSpaceCnt{ blankSize + halfNodeWidth
 			- (RedBlackNode::Width % 2 == 0 ? 1 : 0) };
@@ -563,12 +557,6 @@ string RedBlackTree::GetNodeStick(RedBlackNode* node, int blankSize)
 		}
 		result.append(node->isEmpty ? " " : "┐");
 		result.append(string(halfNodeWidth, ' '));
-	}
-
-	int curDepth{ node->GetCurDepth() };
-	if (curDepth == 3)
-	{
-		std::cout << "result: |" << result << "|\n\n";
 	}
 
 	return result;
@@ -637,13 +625,22 @@ void RedBlackTree::RotateLeft(RedBlackNode* node)
 	RedBlackNode* p{ node };
 	RedBlackNode* p2{ p->parent };
 
+	bool wasPLeft{ IsLeftNode(p) };
+
 	p->right = x->left;
 	x->left->parent = p;
 	x->left = p;
 	p->parent = x;
 	if (p2 != nullptr)
 	{
-		p2->left = x;
+		if (wasPLeft)
+		{
+			p2->left = x;
+		}
+		else
+		{
+			p2->right = x;
+		}
 	}
 	else
 	{
@@ -662,13 +659,22 @@ void RedBlackTree::RotateRight(RedBlackNode* node)
 	RedBlackNode* p{ node };
 	RedBlackNode* p2{ p->parent };
 
+	bool wasPLeft{ IsLeftNode(p) };
+
 	p->left = x->right;
 	x->right->parent = p;
 	x->right = p;
 	p->parent = x;
 	if (p2 != nullptr)
 	{
-		p2->right = x;
+		if (wasPLeft)
+		{
+			p2->left = x;
+		}
+		else
+		{
+			p2->right = x;
+		}
 	}
 	else
 	{

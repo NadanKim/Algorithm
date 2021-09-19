@@ -24,10 +24,10 @@ struct RedBlackNode
 	// NodeSize + ColorSize
 	const static int Width = 8;
 
-	RedBlackNode() : isEmpty{ false }, data { 0 }, color{ NodeColor::Red }, parent{ nullptr },
-		left{ nullptr }, right{ nullptr } {}
-	RedBlackNode(int data) : isEmpty{ false }, data{ data }, color{ NodeColor::Red }, parent{ nullptr },
-		left{ nullptr }, right{ nullptr } {}
+	RedBlackNode() : isEmpty{ false }, data { 0 }, color{ NodeColor::Red },
+		parent{ nullptr }, left{ nullptr }, right{ nullptr } {}
+	RedBlackNode(int data) : isEmpty{ false }, data{ data }, color{ NodeColor::Red }, 
+		parent{ nullptr }, left{ nullptr }, right{ nullptr } {}
 
 	void Clear()
 	{
@@ -99,7 +99,8 @@ struct RedBlackNode
 
 		string colorText = (color == NodeColor::Black ? "B" : "R");
 
-		return string(leftSpaceCnt, '_') + dataStr + string(rightSpaceCnt, '_') + "(" + colorText + ")";
+		return string(leftSpaceCnt, '_') + dataStr 
+			+ string(rightSpaceCnt, '_') + "(" + colorText + ")";
 	}
 
 	bool isEmpty;
