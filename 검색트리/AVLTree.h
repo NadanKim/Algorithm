@@ -73,7 +73,8 @@ struct AVLNode
 
 		string bfStr = bf >= 0 ? "+" + std::to_string(bf) : std::to_string(bf);
 
-		return string(leftSpaceCnt, '_') + dataStr + string(rightSpaceCnt, '_') + "(" + bfStr + ")";
+		return string(leftSpaceCnt, '_') + dataStr + 
+			string(rightSpaceCnt, '_') + "(" + bfStr + ")";
 	}
 
 	bool isEmpty;

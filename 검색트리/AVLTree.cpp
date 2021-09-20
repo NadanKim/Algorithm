@@ -434,10 +434,21 @@ bool AVLTree::IsRightNode(AVLNode* node)
 AVLNode* AVLTree::RotateLeft(AVLNode* node)
 {
 	AVLNode* x{ node };
+	AVLNode* p{ x->parent };
 	AVLNode* c{ x->right };
 
+	bool wasPLeft{ IsLeftNode(x) };
+
 	c->left = x;
-	c->parent = x->parent;
+	c->parent = p;
+	if (wasPLeft)
+	{
+		p->left = c;
+	}
+	else
+	{
+		p->right = c;
+	}
 	x->parent = c;
 	x->right = nullptr;
 
@@ -451,10 +462,21 @@ AVLNode* AVLTree::RotateLeft(AVLNode* node)
 AVLNode* AVLTree::RotateRight(AVLNode* node)
 {
 	AVLNode* x{ node };
+	AVLNode* p{ x->parent };
 	AVLNode* c{ x->left };
 
+	bool wasPLeft{ IsLeftNode(x) };
+
 	c->right = x;
-	c->parent = x->parent;
+	c->parent = p;
+	if (wasPLeft)
+	{
+		p->left = c;
+	}
+	else
+	{
+		p->right = c;
+	}
 	x->parent = c;
 	x->left = nullptr;
 
@@ -503,6 +525,7 @@ int AVLTree::CalculateBalaceFactor(AVLNode* node)
 			node = RotateRight(x);
 		}
 
+		x->bf = GetNodeDepth(x->left) - GetNodeDepth(x->right);
 		node->bf = GetNodeDepth(node->left) - GetNodeDepth(node->right);
 	}
 
