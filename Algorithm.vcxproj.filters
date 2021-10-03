@@ -12,6 +12,9 @@
     <ClCompile Include="검색트리\AVLTree.cpp">
       <Filter>검색트리</Filter>
     </ClCompile>
+    <ClCompile Include="검색트리\BTree.cpp">
+      <Filter>검색트리</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="정렬">
@@ -57,6 +60,9 @@
       <Filter>검색트리</Filter>
     </ClInclude>
     <ClInclude Include="검색트리\AVLTree.h">
+      <Filter>검색트리</Filter>
+    </ClInclude>
+    <ClInclude Include="검색트리\BTree.h">
       <Filter>검색트리</Filter>
     </ClInclude>
   </ItemGroup>
