@@ -6,8 +6,17 @@ struct BTreeNode;
 /// <summary>
 /// B 트리의 노드에서 사용할 키
 /// </summary>
-class BTreeNodeKey
+struct BTreeNodeKey
 {
+	BTreeNodeKey() : left(nullptr), value(0), right(nullptr) {}
+
+	void Clear()
+	{
+		left = nullptr;
+		value = 0;
+		right = nullptr;
+	}
+
 	BTreeNode* left;
 	int value;
 	BTreeNode* right;
@@ -29,8 +38,32 @@ struct BTreeNode
 		delete[] keys;
 	}
 
+	void Clear()
+	{
+		parent = nullptr;
+		for (int i = 0; i < TotalKeyCount; i++)
+		{
+			keys[i].Clear();
+		}
+	}
+
 	BTreeNode* parent;
 	BTreeNodeKey* keys;
+};
+
+/// <summary>
+/// B 트리에서 노드의 재활용을 위한 매니저
+/// </summary>
+class BTreeNodeManager
+{
+public:
+	~BTreeNodeManager();
+
+	void Push(BTreeNode* node);
+	BTreeNode* Pop();
+
+private:
+	BTreeNode* nodes;
 };
 
 /// <summary>
