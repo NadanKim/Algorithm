@@ -8,15 +8,17 @@ struct BTreeNode;
 /// </summary>
 struct BTreeNodeKey
 {
-	BTreeNodeKey() : left(nullptr), value(0), right(nullptr) {}
+	BTreeNodeKey() : isSet(false), left(nullptr), value(0), right(nullptr) {}
 
 	void Clear()
 	{
+		isSet = false;
 		left = nullptr;
 		value = 0;
 		right = nullptr;
 	}
 
+	bool isSet;
 	BTreeNode* left;
 	int value;
 	BTreeNode* right;
@@ -72,31 +74,19 @@ private:
 class BTree
 {
 public:
-	/*~BTree();
+	~BTree();
 
 	bool Exists(int data);
-	const BinarySearchNode& Search(int data);
 	void Insert(int data);
-	void Delete(int data);
-
-	void PrintTree();
+	//void Delete(int data);
 
 private:
-	void Insert(BinarySearchNode* parent, int data);
-	void Delete(BinarySearchNode* node);
+	//void Insert(BinarySearchNode* parent, int data);
+	//void Delete(BinarySearchNode* node);
 
-	void PrintTree(BinarySearchNode* node, int lineWidth);
-	string GetNodeStick(BinarySearchNode* node, int blankSize);
-
-	BinarySearchNode* GetNode(int data);
-
-	bool IsLeftNode(BinarySearchNode* node);
-	bool IsRightNode(BinarySearchNode* node);
+	//BinarySearchNode* GetNode(int data);
 
 private:
-	BinarySearchNode* _root;
-	BinarySearchNodeManager _nodeManager;
-	queue<BinarySearchNode*> _queue;
-	map<int, string> _numberMap;
-	map<int, string> _stickMap;*/
+	BTreeNode* _root;
+	BTreeNodeManager _nodeManager;
 };
