@@ -8,17 +8,11 @@ struct BTreeNode;
 /// </summary>
 struct BTreeNodeKey
 {
-	BTreeNodeKey() : isSet(false), left(nullptr), value(0), right(nullptr) {}
+	BTreeNodeKey() : left(nullptr), value(0), right(nullptr) {}
 
-	void Clear()
-	{
-		isSet = false;
-		left = nullptr;
-		value = 0;
-		right = nullptr;
-	}
+	void Clear();
+	void Set(int data);
 
-	bool isSet;
 	BTreeNode* left;
 	int value;
 	BTreeNode* right;
@@ -31,26 +25,16 @@ struct BTreeNode
 {
 	static const size_t TotalKeyCount{ 4 };
 
-	BTreeNode() : parent(nullptr)
-	{
-		keys = new BTreeNodeKey[TotalKeyCount];
-	}
-	~BTreeNode()
-	{
-		delete[] keys;
-	}
+	BTreeNode();
+	~BTreeNode();
 
-	void Clear()
-	{
-		parent = nullptr;
-		for (int i = 0; i < TotalKeyCount; i++)
-		{
-			keys[i].Clear();
-		}
-	}
+	void Clear();
+
+	bool Insert(int data);
 
 	BTreeNode* parent;
 	BTreeNodeKey* keys;
+	size_t size;
 };
 
 /// <summary>
