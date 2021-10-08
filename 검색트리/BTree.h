@@ -31,6 +31,7 @@ struct BTreeNode
 	void Clear();
 
 	bool Insert(int data);
+	BTreeNode* GetProperNodeToInsert(int data);
 
 	BTreeNode* parent;
 	BTreeNodeKey* keys;

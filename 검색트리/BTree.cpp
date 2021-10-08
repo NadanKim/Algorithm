@@ -65,6 +65,35 @@ bool BTreeNode::Insert(int data)
 
 	return true;
 }
+
+/// <summary>
+/// 삽입 처리를 위한 적절한 노드를 반환한다.
+/// </summary>
+/// <param name="data">추가할 값</param>
+/// <returns>적절한 노드</returns>
+BTreeNode* BTreeNode::GetProperNodeToInsert(int data)
+{
+	for (int i = 0; i < size; i++)
+	{
+		if (data < keys[i].value)
+		{
+			return keys[i].left;
+		}
+
+		if (keys[i].value < data)
+		{
+			if (i == size)
+			{
+				return keys[i].right;
+			}
+			else if (data < keys[i + 1].value)
+			{
+				return keys[i].right;
+			}
+		}
+	}
+	return nullptr;
+}
 #pragma endregion
 
 #pragma region 노드 매니저
@@ -177,6 +206,16 @@ void BTree::Insert(int data)
 			// 오버플로우 처리
 			// 일반화
 			return;
+		}
+		else
+		{
+			BTreeNode* node{ _root->GetProperNodeToInsert(data) };
+			if (node == nullptr)
+			{
+				node = _nodeManager.Pop();
+				node->parent = _root;
+				// node에 대해서 재귀적 처리 진행
+			}
 		}
 	}
 }
