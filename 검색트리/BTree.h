@@ -66,7 +66,7 @@ public:
 	//void Delete(int data);
 
 private:
-	//void Insert(BinarySearchNode* parent, int data);
+	void Insert(BTreeNode* parent, int data);
 	//void Delete(BinarySearchNode* node);
 
 	//BinarySearchNode* GetNode(int data);

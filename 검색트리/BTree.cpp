@@ -198,24 +198,39 @@ bool BTree::Exists(int data)
 /// <param name="data">삽입할 값</param>
 void BTree::Insert(int data)
 {
-	if (_root == nullptr)
+	if (Exists(data))
 	{
-		_root = _nodeManager.Pop();
-		if (_root->Insert(data))
+		return;
+	}
+
+	Insert(_root, data);
+}
+
+/// <summary>
+/// 주어진 값을 B 트리에 삽입한다.
+/// </summary>
+/// <param name="parent">삽입할 노드</param>
+/// <param name="data">삽입할 값</param>
+void BTree::Insert(BTreeNode* parent, int data)
+{
+	// 루트가 빈 값이었던 경우
+	if (parent == nullptr)
+	{
+		BTreeNode* node{ _nodeManager.Pop() };
+		node->Insert(data);
+		_root = node;
+	}
+	// 노드에 키 삽입 실패한 경우
+	else if (!parent->Insert(data))
+	{
+		BTreeNode* node = parent->GetProperNodeToInsert(data);
+		if (node != nullptr)
 		{
-			// 오버플로우 처리
-			// 일반화
-			return;
+			Insert(node, data);
 		}
 		else
 		{
-			BTreeNode* node{ _root->GetProperNodeToInsert(data) };
-			if (node == nullptr)
-			{
-				node = _nodeManager.Pop();
-				node->parent = _root;
-				// node에 대해서 재귀적 처리 진행
-			}
+			// 기존 노드(parent)에 대해 오버플로우 처리 진행
 		}
 	}
 }
