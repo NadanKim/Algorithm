@@ -8,14 +8,16 @@ struct BTreeNode;
 /// </summary>
 struct BTreeNodeKey
 {
-	BTreeNodeKey() : left(nullptr), value(0), right(nullptr) {}
+	BTreeNodeKey() : prev(nullptr), left(nullptr), value(0), right(nullptr), next(nullptr) {}
 
 	void Clear();
 	void Set(int data);
 
+	BTreeNodeKey* prev;
 	BTreeNode* left;
 	int value;
 	BTreeNode* right;
+	BTreeNodeKey* next;
 };
 
 /// <summary>
@@ -23,19 +25,17 @@ struct BTreeNodeKey
 /// </summary>
 struct BTreeNode
 {
-	static const size_t TotalKeyCount{ 4 };
+	static const size_t TotalKeyCount{ 2 };
 
-	BTreeNode();
 	~BTreeNode();
 
 	void Clear();
 
-	bool Insert(int data);
-	BTreeNode* GetProperNodeToInsert(int data);
-
 	BTreeNode* parent;
-	BTreeNodeKey* keys;
+	BTreeNodeKey* keyRoot;
 	size_t size;
+
+	static BTreeNodeKeyManager* keyManager;
 };
 
 /// <summary>
@@ -44,6 +44,7 @@ struct BTreeNode
 class BTreeNodeManager
 {
 public:
+	BTreeNodeManager();
 	~BTreeNodeManager();
 
 	void Push(BTreeNode* node);
@@ -51,6 +52,21 @@ public:
 
 private:
 	BTreeNode* nodes;
+};
+
+/// <summary>
+/// B 트리에서 노드의 키를 재활용 하기위한 매니저
+/// </summary>
+class BTreeNodeKeyManager
+{
+public:
+	~BTreeNodeKeyManager();
+
+	void Push(BTreeNodeKey* node);
+	BTreeNodeKey* Pop();
+
+private:
+	BTreeNodeKey* nodes;
 };
 
 /// <summary>
@@ -67,6 +83,7 @@ public:
 
 private:
 	void Insert(BTreeNode* parent, int data);
+	void ClearOverflow(BTreeNode* node, int data);
 	//void Delete(BinarySearchNode* node);
 
 	//BinarySearchNode* GetNode(int data);
