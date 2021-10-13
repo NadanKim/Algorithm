@@ -149,55 +149,52 @@ BTreeNodeKey* BTreeNodeKeyManager::Pop()
 #pragma endregion
 
 #pragma region B 트리
-///// <summary>
-///// B 트리가 제거될 때 사용한 모든 노드를 반환한다.
-///// </summary>
-//BTree::~BTree()
-//{
-//}
-//
-///// <summary>
-///// B 트리를 확인하여 주어진 값이 트리에 존재하는지 여부를 반환한다.
-///// </summary>
-///// <param name="data">확인할 값</param>
-///// <returns>존재 여부</returns>
-//bool BTree::Exists(int data)
-//{
-//	BTreeNode* node{ _root };
-//	while (node != nullptr)
-//	{
-//		for (int i = 0; i < node->size; i++)
-//		{
-//			if (node->keys[i].value == data)
-//			{
-//				return true;
-//			}
-//
-//			if (data < node->keys[i].value)
-//			{
-//				node = node->keys[i].left;
-//				break;
-//			}
-//
-//			if (node->keys[i].value < data)
-//			{
-//				if (i == node->size)
-//				{
-//					node = node->keys[i].right;
-//					break;
-//				}
-//				else if(data < node->keys[i + 1].value)
-//				{
-//					node = node->keys[i].right;
-//					break;
-//				}
-//			}
-//		}
-//	}
-//	
-//	return false;
-//}
-//
+/// <summary>
+/// B 트리가 제거될 때 사용한 모든 노드를 반환한다.
+/// </summary>
+BTree::~BTree()
+{
+}
+
+/// <summary>
+/// B 트리를 확인하여 주어진 값이 트리에 존재하는지 여부를 반환한다.
+/// </summary>
+/// <param name="data">확인할 값</param>
+/// <returns>존재 여부</returns>
+bool BTree::Exists(int data)
+{
+	BTreeNode* node{ _root };
+	while (node != nullptr)
+	{
+		BTreeNodeKey* key{ node->keyRoot };
+		while (key != nullptr)
+		{
+			if (key->value == data)
+			{
+				return true;
+			}
+
+			if (data < key->value)
+			{
+				node = key->left;
+				break;
+			}
+			else if (key->value < data)
+			{
+				if (key->next == nullptr || data < key->next->value)
+				{
+					node = key->right;
+					break;
+				}
+			}
+			
+			key = key->next;
+		}
+	}
+	
+	return false;
+}
+
 ///// <summary>
 ///// 주어진 값을 B 트리에 삽입한다.
 ///// </summary>
