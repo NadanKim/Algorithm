@@ -85,48 +85,60 @@ void BTreeNode::Clear()
 /// <param name="data">삽입할 데이터</param>
 bool BTreeNode::Insert(int data)
 {
-	if (size == TotalKeyCount)
-	{
-		return false;
-	}
-
 	if (keyRoot == nullptr)
 	{
 		keyRoot = keyManager->Pop();
 		keyRoot->Set(data);
-		size++;
-		return true;
 	}
-
-	BTreeNodeKey* newKey{ keyManager->Pop() };
-	newKey->value = data;
-
-	// 현재 키 중 가장 작은 값인 경우
-	if (data < keyRoot->value)
+	else
 	{
-		keyRoot->AddKeyToPrev(newKey);
-		keyRoot = newKey;
-		size++;
-		return true;
-	}
+		BTreeNodeKey* newKey{ keyManager->Pop() };
+		newKey->Set(data);
 
-	BTreeNodeKey* key{ keyRoot };
-	while (key->next != nullptr)
-	{
-		if (data < key->value)
+		// 새 값이 노드에서 가장 작은 경우
+		if (data < keyRoot->value)
 		{
-			key->AddKeyToPrev(newKey);
-			size++;
-			return true;
+			keyRoot->AddKeyToPrev(newKey);
+			keyRoot = newKey;
 		}
+		else
+		{
+			BTreeNodeKey* key{ keyRoot };
+			BTreeNodeKey* prevKey{ nullptr };
 
-		key = key->next;
+			while (key != nullptr)
+			{
+				if (data < key->value)
+				{
+					prevKey = nullptr;
+					key->AddKeyToPrev(newKey);
+					break;
+				}
+
+				prevKey = key;
+				key = key->next;
+			}
+
+			// 새 값이 노드에서 가장 큰 경우
+			if (prevKey != nullptr)
+			{
+				prevKey->AddKeyToNext(newKey);
+			}
+		}
 	}
 
-	key->AddKeyToNext(newKey);
 	size++;
 
-	return true;
+	return size <= TotalKeyCount;
+}
+
+/// <summary>
+/// 노드에 여유가 있는지 여부를 반환한다.
+/// </summary>
+/// <returns>삽입 가능한지 여부</returns>
+bool BTreeNode::IsAbleToInsert()
+{
+	return size < TotalKeyCount;
 }
 #pragma endregion
 
@@ -230,7 +242,7 @@ BTreeNodeKey* BTreeNodeKeyManager::Pop()
 }
 #pragma endregion
 
-#pragma region B 트리
+#pragma region BTree Public Methods
 /// <summary>
 /// B 트리가 제거될 때 사용한 모든 노드를 반환한다.
 /// </summary>
@@ -288,41 +300,68 @@ void BTree::Insert(int data)
 		return;
 	}
 
-	Insert(_root, data);
+	BTreeNode* node{ GetProperNodeToInsert(data) };
+	if (!node->Insert(data))
+	{
+		ClearOverflow(node, data);
+	}
 }
+#pragma endregion
 
-///// <summary>
-///// 주어진 값을 B 트리에 삽입한다.
-///// </summary>
-///// <param name="parent">삽입할 노드</param>
-///// <param name="data">삽입할 값</param>
-//void BTree::Insert(BTreeNode* parent, int data)
-//{
-//	// 루트가 빈 값이었던 경우
-//	if (parent == nullptr)
-//	{
-//		BTreeNode* node{ _nodeManager.Pop() };
-//		node->Insert(data);
-//		_root = node;
-//	}
-//	// 노드에 키 삽입 실패한 경우
-//	else if (!parent->Insert(data))
-//	{
-//		BTreeNode* node = parent->GetProperNodeToInsert(data);
-//		if (node != nullptr)
-//		{
-//			Insert(node, data);
-//		}
-//		else
-//		{
-//
-//			// 기존 노드(parent)에 대해 오버플로우 처리 진행
-//		}
-//	}
-//}
-
+#pragma region BTree Private Methods
 void BTree::ClearOverflow(BTreeNode* node, int data)
 {
 
+}
+#pragma endregion
+
+#pragma region BTree Util Methods
+/// <summary>
+/// 주어진 data를 삽입할 수 있는 적절한 노드를 찾아 반환한다.
+/// </summary>
+/// <param name="data">삽입할 값</param>
+/// <returns>데이터를 삽입할 수 있는 노드</returns>
+BTreeNode* BTree::GetProperNodeToInsert(int data)
+{
+	if (_root == nullptr)
+	{
+		_root = _nodeManager.Pop();
+		return _root;
+	}
+
+	BTreeNode* node{ _root };
+	BTreeNode* prevNode{ nullptr };
+
+	while (node != nullptr)
+	{
+		if (node->IsAbleToInsert())
+		{
+			return node;
+		}
+
+		BTreeNodeKey* key{ node->keyRoot };
+		while (key != nullptr)
+		{
+			if (data < key->value)
+			{
+				prevNode = node;
+				node = key->left;
+				break;
+			}
+			else if (key->value < data)
+			{
+				if (key->next == nullptr || data < key->next->value)
+				{
+					prevNode = node;
+					node = key->right;
+					break;
+				}
+			}
+
+			key = key->next;
+		}
+	}
+	
+	return prevNode;
 }
 #pragma endregion

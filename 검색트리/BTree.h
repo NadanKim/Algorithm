@@ -35,6 +35,8 @@ struct BTreeNode
 	void Clear();
 	bool Insert(int data);
 
+	bool IsAbleToInsert();
+
 	BTreeNode* parent;
 	BTreeNodeKey* keyRoot;
 	size_t size;
@@ -86,11 +88,13 @@ public:
 	//void Delete(int data);
 
 private:
-	void Insert(BTreeNode* parent, int data);
 	void ClearOverflow(BTreeNode* node, int data);
 	//void Delete(BinarySearchNode* node);
 
 	//BinarySearchNode* GetNode(int data);
+
+private: // For Util Methods
+	BTreeNode* GetProperNodeToInsert(int data);
 
 private:
 	BTreeNode* _root;
