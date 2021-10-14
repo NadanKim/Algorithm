@@ -13,6 +13,9 @@ struct BTreeNodeKey
 	void Clear();
 	void Set(int data);
 
+	void AddKeyToPrev(BTreeNodeKey* newKey);
+	void AddKeyToNext(BTreeNodeKey* newKey);
+
 	BTreeNodeKey* prev;
 	BTreeNode* left;
 	int value;
@@ -30,6 +33,7 @@ struct BTreeNode
 	~BTreeNode();
 
 	void Clear();
+	bool Insert(int data);
 
 	BTreeNode* parent;
 	BTreeNodeKey* keyRoot;

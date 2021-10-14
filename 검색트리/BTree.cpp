@@ -23,6 +23,38 @@ void BTreeNodeKey::Set(int data)
 }
 
 /// <summary>
+/// 새 키를 기존 키의 왼쪽에 삽입한다.
+/// </summary>
+/// <param name="newKey">삽입할 키</param>
+void BTreeNodeKey::AddKeyToPrev(BTreeNodeKey* newKey)
+{
+	BTreeNodeKey* prevKey{ prev };
+	if (prevKey != nullptr)
+	{
+		prevKey->next = newKey;
+		newKey->prev = prevKey;
+	}
+	newKey->next = this;
+	prev = newKey;
+}
+
+/// <summary>
+/// 새 키를 기존 키의 오른쪽에 삽입한다.
+/// </summary>
+/// <param name="newKey">삽입할 키</param>
+void BTreeNodeKey::AddKeyToNext(BTreeNodeKey* newKey)
+{
+	BTreeNodeKey* nextKey{ next };
+	if (nextKey != nullptr)
+	{
+		nextKey->prev = newKey;
+		newKey->next = nextKey;
+	}
+	newKey->prev = this;
+	next = newKey;
+}
+
+/// <summary>
 /// B 트리 소멸자, 생성했던 키를 제거한다.
 /// </summary>
 BTreeNode::~BTreeNode()
@@ -45,6 +77,56 @@ void BTreeNode::Clear()
 		key->Clear();
 		keyManager->Push(key);
 	}
+}
+
+/// <summary>
+/// 노드에 데이터를 삽입한다.
+/// </summary>
+/// <param name="data">삽입할 데이터</param>
+bool BTreeNode::Insert(int data)
+{
+	if (size == TotalKeyCount)
+	{
+		return false;
+	}
+
+	if (keyRoot == nullptr)
+	{
+		keyRoot = keyManager->Pop();
+		keyRoot->Set(data);
+		size++;
+		return true;
+	}
+
+	BTreeNodeKey* newKey{ keyManager->Pop() };
+	newKey->value = data;
+
+	// 현재 키 중 가장 작은 값인 경우
+	if (data < keyRoot->value)
+	{
+		keyRoot->AddKeyToPrev(newKey);
+		keyRoot = newKey;
+		size++;
+		return true;
+	}
+
+	BTreeNodeKey* key{ keyRoot };
+	while (key->next != nullptr)
+	{
+		if (data < key->value)
+		{
+			key->AddKeyToPrev(newKey);
+			size++;
+			return true;
+		}
+
+		key = key->next;
+	}
+
+	key->AddKeyToNext(newKey);
+	size++;
+
+	return true;
 }
 #pragma endregion
 
@@ -195,20 +277,20 @@ bool BTree::Exists(int data)
 	return false;
 }
 
-///// <summary>
-///// 주어진 값을 B 트리에 삽입한다.
-///// </summary>
-///// <param name="data">삽입할 값</param>
-//void BTree::Insert(int data)
-//{
-//	if (Exists(data))
-//	{
-//		return;
-//	}
-//
-//	Insert(_root, data);
-//}
-//
+/// <summary>
+/// 주어진 값을 B 트리에 삽입한다.
+/// </summary>
+/// <param name="data">삽입할 값</param>
+void BTree::Insert(int data)
+{
+	if (Exists(data))
+	{
+		return;
+	}
+
+	Insert(_root, data);
+}
+
 ///// <summary>
 ///// 주어진 값을 B 트리에 삽입한다.
 ///// </summary>
@@ -238,9 +320,9 @@ bool BTree::Exists(int data)
 //		}
 //	}
 //}
-//
-//void BTree::ClearOverflow(BTreeNode* node, int data)
-//{
-//
-//}
+
+void BTree::ClearOverflow(BTreeNode* node, int data)
+{
+
+}
 #pragma endregion
