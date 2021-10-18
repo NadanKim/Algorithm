@@ -16,6 +16,8 @@ struct BTreeNodeKey
 	void AddKeyToPrev(BTreeNodeKey* newKey);
 	void AddKeyToNext(BTreeNodeKey* newKey);
 
+	void SwapValue(BTreeNodeKey* other);
+
 	BTreeNodeKey* prev;
 	BTreeNode* left;
 	int value;
@@ -34,8 +36,12 @@ struct BTreeNode
 
 	void Clear();
 	bool Insert(int data);
+	bool Insert(BTreeNodeKey* newKey);
 
 	bool IsAbleToInsert();
+
+	BTreeNodeKey* GetSmallestKey();
+	BTreeNodeKey* GetBiggestKey();
 
 	BTreeNode* parent;
 	BTreeNodeKey* keyRoot;
@@ -88,7 +94,7 @@ public:
 	//void Delete(int data);
 
 private:
-	void ClearOverflow(BTreeNode* node, int data);
+	void ClearOverflow(BTreeNode* node);
 	//void Delete(BinarySearchNode* node);
 
 	//BinarySearchNode* GetNode(int data);

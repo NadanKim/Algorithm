@@ -55,6 +55,17 @@ void BTreeNodeKey::AddKeyToNext(BTreeNodeKey* newKey)
 }
 
 /// <summary>
+/// 다른 키와 value를 교환한다.
+/// </summary>
+/// <param name="other">다른 키</param>
+void BTreeNodeKey::SwapValue(BTreeNodeKey* other)
+{
+	int temp{ value };
+	value = other->value;
+	other->value = temp;
+}
+
+/// <summary>
 /// B 트리 소멸자, 생성했던 키를 제거한다.
 /// </summary>
 BTreeNode::~BTreeNode()
@@ -83,20 +94,30 @@ void BTreeNode::Clear()
 /// 노드에 데이터를 삽입한다.
 /// </summary>
 /// <param name="data">삽입할 데이터</param>
+/// <returns>성공 여부</returns>
 bool BTreeNode::Insert(int data)
+{
+	BTreeNodeKey* newKey{ keyManager->Pop() };
+	newKey->Set(data);
+
+	return Insert(newKey);
+}
+
+/// <summary>
+/// 주어진 키를 노드의 키에 삽입한다.
+/// </summary>
+/// <param name="key">삽입할 키</param>
+/// <returns>성공 여부</returns>
+bool BTreeNode::Insert(BTreeNodeKey* newKey)
 {
 	if (keyRoot == nullptr)
 	{
-		keyRoot = keyManager->Pop();
-		keyRoot->Set(data);
+		keyRoot = newKey;
 	}
 	else
 	{
-		BTreeNodeKey* newKey{ keyManager->Pop() };
-		newKey->Set(data);
-
 		// 새 값이 노드에서 가장 작은 경우
-		if (data < keyRoot->value)
+		if (newKey->value < keyRoot->value)
 		{
 			keyRoot->AddKeyToPrev(newKey);
 			keyRoot = newKey;
@@ -108,7 +129,7 @@ bool BTreeNode::Insert(int data)
 
 			while (key != nullptr)
 			{
-				if (data < key->value)
+				if (newKey->value < key->value)
 				{
 					prevKey = nullptr;
 					key->AddKeyToPrev(newKey);
@@ -139,6 +160,47 @@ bool BTreeNode::Insert(int data)
 bool BTreeNode::IsAbleToInsert()
 {
 	return size < TotalKeyCount;
+}
+
+/// <summary>
+/// 가장 작은 키를 노드에서 떼어내 반환한다.
+/// </summary>
+/// <returns>가장 작은 키</returns>
+BTreeNodeKey* BTreeNode::GetSmallestKey()
+{
+	BTreeNodeKey* key{ nullptr };
+	if (keyRoot != nullptr)
+	{
+		key = keyRoot;
+		keyRoot = keyRoot->next;
+		keyRoot->prev = nullptr;
+	}
+	return key;
+}
+
+/// <summary>
+/// 가장 큰 키를 노드에서 떼어내 반환한다.
+/// </summary>
+/// <returns>가장 큰 키</returns>
+BTreeNodeKey* BTreeNode::GetBiggestKey()
+{
+	BTreeNodeKey* key{ nullptr };
+	if (keyRoot != nullptr)
+	{
+		key = keyRoot;
+		while (key->next != nullptr)
+		{
+			key = key->next;
+		}
+
+		BTreeNodeKey* prev{ key->prev };
+		if (prev != nullptr)
+		{
+			prev->next = nullptr;
+			key->prev = nullptr;
+		}
+	}
+	return key;
 }
 #pragma endregion
 
@@ -303,15 +365,61 @@ void BTree::Insert(int data)
 	BTreeNode* node{ GetProperNodeToInsert(data) };
 	if (!node->Insert(data))
 	{
-		ClearOverflow(node, data);
+		ClearOverflow(node);
 	}
 }
 #pragma endregion
 
 #pragma region BTree Private Methods
-void BTree::ClearOverflow(BTreeNode* node, int data)
+/// <summary>
+/// 오버플로우 발생한 노드를 정리한다.
+/// </summary>
+/// <param name="node">오버 플로우가 발생한 노드</param>
+void BTree::ClearOverflow(BTreeNode* node)
 {
+	bool isDone{ false };
 
+	BTreeNode* p{ node->parent };
+	// 루트 노드가 아닌 경우
+	if (p != nullptr)
+	{
+		BTreeNodeKey* lsKey{ nullptr };
+		BTreeNodeKey* rsKey{ p->keyRoot };
+		while (rsKey != nullptr)
+		{
+			if (rsKey->left == node)
+			{
+				break;
+			}
+			lsKey = rsKey;
+			rsKey = rsKey->next;
+		}
+
+		// 왼쪽 형제가 존재하고 삽입 가능한 경우
+		if (lsKey != nullptr && lsKey->left != nullptr
+			&& lsKey->left->IsAbleToInsert())
+		{
+			BTreeNodeKey* key{ node->GetSmallestKey() };
+			lsKey->SwapValue(key);
+			lsKey->left->Insert(key);
+			isDone = true;
+		}
+		// 오른쪽 형제가 존재하고 삽입 가능한 경우
+		else if (rsKey != nullptr && rsKey->right != nullptr
+			&& rsKey->right->IsAbleToInsert())
+		{
+			BTreeNodeKey* key{ node->GetBiggestKey() };
+			rsKey->SwapValue(key);
+			rsKey->right->Insert(key);
+			isDone = true;
+		}
+	}
+
+	// 삽입 가능한 형제가 없는 경우
+	if (!isDone)
+	{
+
+	}
 }
 #pragma endregion
 
