@@ -175,6 +175,7 @@ BTreeNodeKey* BTreeNode::GetSmallestKey()
 		keyRoot = keyRoot->next;
 		keyRoot->prev = nullptr;
 	}
+	size--;
 	return key;
 }
 
@@ -200,6 +201,42 @@ BTreeNodeKey* BTreeNode::GetBiggestKey()
 			key->prev = nullptr;
 		}
 	}
+	size--;
+	return key;
+}
+
+/// <summary>
+/// 노드의 키 중 중간 값을 가진 키를 떼어내 반환한다.
+/// </summary>
+/// <returns>중간 키</returns>
+BTreeNodeKey* BTreeNode::GetMiddleKey()
+{
+	size_t midIdx = TotalKeyCount / 2;
+
+	BTreeNodeKey* key{ nullptr };
+	if (keyRoot != nullptr)
+	{
+		key = keyRoot;
+		while (key->next != nullptr && midIdx > 0)
+		{
+			key = key->next;
+			midIdx--;
+		}
+
+		BTreeNodeKey* prev{ key->prev };
+		BTreeNodeKey* next{ key->next };
+		if (prev != nullptr)
+		{
+			prev->next = next;
+			key->prev = nullptr;
+		}
+		if (next != nullptr)
+		{
+			next->prev = prev;
+			key->next = nullptr;
+		}
+	}
+	size--;
 	return key;
 }
 #pragma endregion
@@ -418,7 +455,13 @@ void BTree::ClearOverflow(BTreeNode* node)
 	// 삽입 가능한 형제가 없는 경우
 	if (!isDone)
 	{
-
+		BTreeNodeKey* key{ node->GetMiddleKey() };
+		// 노드를 가져온 key 를 기준으로 두개로 나눈다.
+		// key를 기준으로 좌, 우 노드가 되도록 한다.
+		// 부모 노드에 key를 삽입하고 형제 키의 좌, 우 자식을 적절히 바꿔준다.
+		// 부모의 사이즈가 넘어가게 된 경우 부모 노드에 처리 반복
+		// 현재 노드가 루트 노드면 key를 가지는 새 노드를 만들어 루트로 만들고
+		// 기존 분리했던 노드를 key의 좌, 우 자식 노드로 적용하고 종료
 	}
 }
 #pragma endregion

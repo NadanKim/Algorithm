@@ -42,6 +42,7 @@ struct BTreeNode
 
 	BTreeNodeKey* GetSmallestKey();
 	BTreeNodeKey* GetBiggestKey();
+	BTreeNodeKey* GetMiddleKey();
 
 	BTreeNode* parent;
 	BTreeNodeKey* keyRoot;
