@@ -33,9 +33,12 @@ void BTreeNodeKey::AddKeyToPrev(BTreeNodeKey* newKey)
 	{
 		prevKey->next = newKey;
 		newKey->prev = prevKey;
+		prevKey->right = newKey->left;
 	}
 	newKey->next = this;
 	prev = newKey;
+
+	left = newKey->right;
 }
 
 /// <summary>
@@ -49,9 +52,12 @@ void BTreeNodeKey::AddKeyToNext(BTreeNodeKey* newKey)
 	{
 		nextKey->prev = newKey;
 		newKey->next = nextKey;
+		nextKey->left = newKey->right;
 	}
 	newKey->prev = this;
 	next = newKey;
+
+	right = newKey->left;
 }
 
 /// <summary>
@@ -456,13 +462,47 @@ void BTree::ClearOverflow(BTreeNode* node)
 	if (!isDone)
 	{
 		BTreeNodeKey* key{ node->GetMiddleKey() };
-		// 노드를 가져온 key 를 기준으로 두개로 나눈다.
-		// key를 기준으로 좌, 우 노드가 되도록 한다.
-		// 부모 노드에 key를 삽입하고 형제 키의 좌, 우 자식을 적절히 바꿔준다.
-		// 부모의 사이즈가 넘어가게 된 경우 부모 노드에 처리 반복
-		// 현재 노드가 루트 노드면 key를 가지는 새 노드를 만들어 루트로 만들고
-		// 기존 분리했던 노드를 key의 좌, 우 자식 노드로 적용하고 종료
+		BTreeNode* newNode{ SplitNodeWithKey(node, key) };
+		key->left = node;
+		key->right = newNode;
+
+		if (node == _root)
+		{
+			BTreeNode* newRootNode{ _nodeManager.Pop() };
+			newRootNode->Insert(key);
+			_root = node;
+		}
+		else if (!node->parent->Insert(key))
+		{
+			ClearOverflow(node->parent);
+		}
 	}
+}
+
+/// <summary>
+/// 노드를 주어진 키를 기준으로 분할하고 새로 생성된 노드를 반환한다.
+/// </summary>
+/// <param name="node">분할할 노드</param>
+/// <param name="key">기준 키</param>
+/// <returns>분할된 새 노드</returns>
+BTreeNode* BTree::SplitNodeWithKey(BTreeNode* node, BTreeNodeKey* key)
+{
+	BTreeNode* newNode{ _nodeManager.Pop() };
+	newNode->parent = node->parent;
+
+	while (true)
+	{
+		BTreeNodeKey* targetKey{ node->GetBiggestKey() };
+		if (targetKey->value < key->value)
+		{
+			node->Insert(targetKey);
+			break;
+		}
+
+		newNode->Insert(targetKey);
+	}
+
+	return newNode;
 }
 #pragma endregion
 

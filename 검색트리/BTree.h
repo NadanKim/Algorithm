@@ -96,6 +96,8 @@ public:
 
 private:
 	void ClearOverflow(BTreeNode* node);
+
+	BTreeNode* SplitNodeWithKey(BTreeNode* node, BTreeNodeKey* key);
 	//void Delete(BinarySearchNode* node);
 
 	//BinarySearchNode* GetNode(int data);
