@@ -232,6 +232,15 @@ bool BTreeNode::IsContainsData(int data)
 }
 
 /// <summary>
+/// 이 노드에서 키를 인출해도 안정적인지 여부를 반환한다.
+/// </summary>
+/// <returns>키를 인출해도 안정적인지 여부</returns>
+bool BTreeNode::IsAbleToWithdraw()
+{
+	return size > TotalKeyCount / 2;
+}
+
+/// <summary>
 /// 가장 작은 키를 노드에서 떼어내 반환한다.
 /// </summary>
 /// <returns>가장 작은 키</returns>
@@ -558,6 +567,15 @@ void BTree::ClearOverflow(BTreeNode* node)
 			ClearOverflow(node->parent);
 		}
 	}
+}
+
+/// <summary>
+/// 언더플로우가 발생한 노드를 정리한다.
+/// </summary>
+/// <param name="node">언더 플로우가 발생한 노드</param>
+void BTree::ClearUnderflow(BTreeNode* node)
+{
+
 }
 
 /// <summary>

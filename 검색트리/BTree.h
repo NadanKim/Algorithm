@@ -43,6 +43,7 @@ struct BTreeNode
 
 	bool IsAbleToInsert();
 	bool IsContainsData(int data);
+	bool IsAbleToWithdraw();
 
 	BTreeNodeKey* GetSmallestKey();
 	BTreeNodeKey* GetBiggestKey();
@@ -100,6 +101,7 @@ public:
 
 private:
 	void ClearOverflow(BTreeNode* node);
+	void ClearUnderflow(BTreeNode* node);
 
 	BTreeNode* SplitNodeWithKey(BTreeNode* node, BTreeNodeKey* key);
 	//void Delete(BinarySearchNode* node);
