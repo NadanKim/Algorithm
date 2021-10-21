@@ -160,12 +160,75 @@ bool BTreeNode::Insert(BTreeNodeKey* newKey)
 }
 
 /// <summary>
+/// 주어진 데이터를 포함하는 키를 노드에서 제거한다.
+/// </summary>
+/// <param name="data">제거할 값</param>
+/// <returns>성공 여부</returns>
+bool BTreeNode::Delete(int data)
+{
+	BTreeNodeKey* key{ keyRoot };
+
+	while (key != nullptr)
+	{
+		if (key->value == data)
+		{
+			return Delete(key);
+		}
+	}
+
+	return false;
+}
+
+/// <summary>
+/// 주어진 키를 노드에서 제거한다.
+/// </summary>
+/// <param name="deleteKey">제거할 키</param>
+/// <returns>성공 여부</returns>
+bool BTreeNode::Delete(BTreeNodeKey* deleteKey)
+{
+	BTreeNodeKey* prevKey{ deleteKey->prev };
+	BTreeNodeKey* nextKey{ deleteKey->next };
+
+	if (prevKey != nullptr)
+	{
+		prevKey->next = nextKey;
+	}
+	if (nextKey != nullptr)
+	{
+		nextKey->prev = prevKey;
+	}
+
+	size--;
+
+	return size >= TotalKeyCount / 2;
+}
+
+/// <summary>
 /// 노드에 여유가 있는지 여부를 반환한다.
 /// </summary>
 /// <returns>삽입 가능한지 여부</returns>
 bool BTreeNode::IsAbleToInsert()
 {
 	return size < TotalKeyCount;
+}
+
+/// <summary>
+/// 현재 노드가 주어진 값을 포함하는지 여부를 반환한다.
+/// </summary>
+/// <param name="data">확인할 값</param>
+/// <returns>값 포함 여부</returns>
+bool BTreeNode::IsContainsData(int data)
+{
+	BTreeNodeKey* key{ keyRoot };
+	while (key != nullptr)
+	{
+		if (key->value == data)
+		{
+			return true;
+		}
+		key = key->next;
+	}
+	return false;
 }
 
 /// <summary>
@@ -411,6 +474,24 @@ void BTree::Insert(int data)
 		ClearOverflow(node);
 	}
 }
+
+/// <summary>
+/// 주어진 값을 가지는 키를 B 트리에서 제거한다.
+/// </summary>
+/// <param name="data">제거할 값</param>
+void BTree::Delete(int data)
+{
+	if (!Exists(data))
+	{
+		return;
+	}
+
+	BTreeNode* node{ GetContainsDataNode(data) };
+	if (!node->Insert(data))
+	{
+		// Underflow 처리
+	}
+}
 #pragma endregion
 
 #pragma region BTree Private Methods
@@ -554,5 +635,45 @@ BTreeNode* BTree::GetProperNodeToInsert(int data)
 	}
 	
 	return prevNode;
+}
+
+/// <summary>
+/// 주어진 값 가지는 키를 포함하는 노드를 반환한다.
+/// </summary>
+/// <param name="data">가져올 값</param>
+/// <returns>값을 가지는 키를 포함하는 노드</returns>
+BTreeNode* BTree::GetContainsDataNode(int data)
+{
+	BTreeNode* node{ _root };
+
+	while (node != nullptr)
+	{
+		if (node->IsContainsData(data))
+		{
+			return node;
+		}
+
+		BTreeNodeKey* key{ node->keyRoot };
+		while (key != nullptr)
+		{
+			if (data < key->value)
+			{
+				node = key->left;
+				break;
+			}
+			else if (key->value < data)
+			{
+				if (key->next == nullptr || data < key->next->value)
+				{
+					node = key->right;
+					break;
+				}
+			}
+
+			key = key->next;
+		}
+	}
+
+	return node;
 }
 #pragma endregion

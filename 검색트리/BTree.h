@@ -38,7 +38,11 @@ struct BTreeNode
 	bool Insert(int data);
 	bool Insert(BTreeNodeKey* newKey);
 
+	bool Delete(int data);
+	bool Delete(BTreeNodeKey* deleteKey);
+
 	bool IsAbleToInsert();
+	bool IsContainsData(int data);
 
 	BTreeNodeKey* GetSmallestKey();
 	BTreeNodeKey* GetBiggestKey();
@@ -92,7 +96,7 @@ public:
 
 	bool Exists(int data);
 	void Insert(int data);
-	//void Delete(int data);
+	void Delete(int data);
 
 private:
 	void ClearOverflow(BTreeNode* node);
@@ -104,6 +108,7 @@ private:
 
 private: // For Util Methods
 	BTreeNode* GetProperNodeToInsert(int data);
+	BTreeNode* GetContainsDataNode(int data);
 
 private:
 	BTreeNode* _root;
