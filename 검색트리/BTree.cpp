@@ -317,6 +317,25 @@ BTreeNodeKey* BTreeNode::GetMiddleKey()
 	size--;
 	return key;
 }
+
+/// <summary>
+/// 주어진 값을 가지는 키를 반환한다.
+/// </summary>
+/// <param name="data">찾을 값</param>
+/// <returns>값을 가지는 키</returns>
+BTreeNodeKey* BTreeNode::GetKey(int data)
+{
+	BTreeNodeKey* key{ keyRoot };
+	while (key != nullptr)
+	{
+		if (key->value == data)
+		{
+			break;
+		}
+		key = key->next;
+	}
+	return key;
+}
 #pragma endregion
 
 #pragma region 노드 매니저
@@ -495,10 +514,10 @@ void BTree::Delete(int data)
 		return;
 	}
 
-	BTreeNode* node{ GetContainsDataNode(data) };
-	if (!node->Insert(data))
+	BTreeNode* node{ GetProperNodeToDelete(data) };
+	if (!node->Delete(data))
 	{
-		// Underflow 처리
+		ClearUnderflow(node);
 	}
 }
 #pragma endregion
@@ -656,42 +675,37 @@ BTreeNode* BTree::GetProperNodeToInsert(int data)
 }
 
 /// <summary>
-/// 주어진 값 가지는 키를 포함하는 노드를 반환한다.
+/// 주어진 값을 카진 키를 제거하기 위해 적절한 노드를 찾아 반환한다.
 /// </summary>
-/// <param name="data">가져올 값</param>
-/// <returns>값을 가지는 키를 포함하는 노드</returns>
-BTreeNode* BTree::GetContainsDataNode(int data)
+/// <param name="data">제거할 값</param>
+/// <returns>삭제를 위한 노드</returns>
+BTreeNode* BTree::GetProperNodeToDelete(int data)
 {
 	BTreeNode* node{ _root };
+	BTreeNode* leafNode{ nullptr };
 
 	while (node != nullptr)
 	{
 		if (node->IsContainsData(data))
 		{
-			return node;
-		}
-
-		BTreeNodeKey* key{ node->keyRoot };
-		while (key != nullptr)
-		{
-			if (data < key->value)
+			BTreeNodeKey* key{ node->GetKey(data) };
+			while (key->right != nullptr)
 			{
-				node = key->left;
-				break;
+				leafNode = key->right;
+				key = leafNode->GetSmallestKey();
 			}
-			else if (key->value < data)
-			{
-				if (key->next == nullptr || data < key->next->value)
-				{
-					node = key->right;
-					break;
-				}
-			}
-
-			key = key->next;
+			break;
 		}
 	}
 
-	return node;
+	if (leafNode != nullptr)
+	{
+		BTreeNodeKey* key{ node->GetKey(data) };
+		BTreeNodeKey* leafKey{ leafNode->GetSmallestKey() };
+		key->SwapValue(leafKey);
+		node = leafNode;
+	}
+
+	return leafNode;
 }
 #pragma endregion

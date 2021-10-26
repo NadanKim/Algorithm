@@ -49,6 +49,8 @@ struct BTreeNode
 	BTreeNodeKey* GetBiggestKey();
 	BTreeNodeKey* GetMiddleKey();
 
+	BTreeNodeKey* GetKey(int data);
+
 	BTreeNode* parent;
 	BTreeNodeKey* keyRoot;
 	size_t size;
@@ -110,7 +112,7 @@ private:
 
 private: // For Util Methods
 	BTreeNode* GetProperNodeToInsert(int data);
-	BTreeNode* GetContainsDataNode(int data);
+	BTreeNode* GetProperNodeToDelete(int data);
 
 private:
 	BTreeNode* _root;
