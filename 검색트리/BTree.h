@@ -106,6 +106,7 @@ private:
 	void ClearUnderflow(BTreeNode* node);
 
 	BTreeNode* SplitNodeWithKey(BTreeNode* node, BTreeNodeKey* key);
+	BTreeNode* MergeNodeWithKey(BTreeNode* node, BTreeNodeKey* key);
 	//void Delete(BinarySearchNode* node);
 
 	//BinarySearchNode* GetNode(int data);

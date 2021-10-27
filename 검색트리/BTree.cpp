@@ -531,12 +531,12 @@ void BTree::ClearOverflow(BTreeNode* node)
 {
 	bool isDone{ false };
 
-	BTreeNode* p{ node->parent };
+	BTreeNode* parent{ node->parent };
 	// 루트 노드가 아닌 경우
-	if (p != nullptr)
+	if (parent != nullptr)
 	{
 		BTreeNodeKey* lsKey{ nullptr };
-		BTreeNodeKey* rsKey{ p->keyRoot };
+		BTreeNodeKey* rsKey{ parent->keyRoot };
 		while (rsKey != nullptr)
 		{
 			if (rsKey->left == node)
@@ -581,9 +581,9 @@ void BTree::ClearOverflow(BTreeNode* node)
 			newRootNode->Insert(key);
 			_root = node;
 		}
-		else if (!node->parent->Insert(key))
+		else if (!parent->Insert(key))
 		{
-			ClearOverflow(node->parent);
+			ClearOverflow(parent);
 		}
 	}
 }
@@ -594,7 +594,71 @@ void BTree::ClearOverflow(BTreeNode* node)
 /// <param name="node">언더 플로우가 발생한 노드</param>
 void BTree::ClearUnderflow(BTreeNode* node)
 {
+	// 노드가 루트인 경우
+	if (node == _root)
+	{
+		if (node->size == 0)
+		{
+			_nodeManager.Push(node);
+			_root = nullptr;
+		}
+	}
+	else
+	{
+		bool isDone{ false };
 
+		BTreeNode* parent{ node->parent };
+		BTreeNodeKey* lsKey{ nullptr };
+		BTreeNodeKey* rsKey{ parent->keyRoot };
+		while (rsKey != nullptr)
+		{
+			if (rsKey->left == node)
+			{
+				break;
+			}
+			lsKey = rsKey;
+			rsKey = rsKey->next;
+		}
+
+		// 왼쪽 형제가 존재하고 삽입 가능한 경우
+		if (lsKey != nullptr && lsKey->left != nullptr
+			&& lsKey->left->IsAbleToWithdraw())
+		{
+			BTreeNodeKey* key{ lsKey->left->GetBiggestKey() };
+			lsKey->SwapValue(key);
+			node->Insert(key);
+			isDone = true;
+		}
+		// 오른쪽 형제가 존재하고 삽입 가능한 경우
+		else if (rsKey != nullptr && rsKey->right != nullptr
+			&& rsKey->right->IsAbleToWithdraw())
+		{
+			BTreeNodeKey* key{ rsKey->right->GetSmallestKey() };
+			rsKey->SwapValue(key);
+			node->Insert(key);
+			isDone = true;
+		}
+
+		// 인출 가능한 형제가 없는 경우
+		if (!isDone)
+		{
+			BTreeNodeKey* key{ lsKey != nullptr ? lsKey : rsKey };
+			BTreeNode* mergeNode{ MergeNodeWithKey(node, key) };
+			if (key->prev != nullptr)
+			{
+				key->prev->right = mergeNode;
+			}
+			if (key->next != nullptr)
+			{
+				key->next->left = mergeNode;
+			}
+
+			if (!parent->Delete(key))
+			{
+				ClearOverflow(parent);
+			}
+		}
+	}
 }
 
 /// <summary>
@@ -621,6 +685,20 @@ BTreeNode* BTree::SplitNodeWithKey(BTreeNode* node, BTreeNodeKey* key)
 	}
 
 	return newNode;
+}
+
+/// <summary>
+/// 주어진 키를 기준으로 노드를 병합한다.
+/// </summary>
+/// <param name="node">병합할 노드</param>
+/// <param name="key">기준 키</param>
+/// <returns>병합된 노드</returns>
+BTreeNode* BTree::MergeNodeWithKey(BTreeNode* node, BTreeNodeKey* key)
+{
+	// Key 기준으로 왼쪽 서브 노드와 node 병합
+	// Key를 새로 만들어 하나의 노드로 삽입 및 서브 트리, prev, next 등 처리
+	// 
+	return nullptr;
 }
 #pragma endregion
 
