@@ -198,6 +198,8 @@ bool BTreeNode::Delete(BTreeNodeKey* deleteKey)
 		nextKey->prev = prevKey;
 	}
 
+	keyManager->Push(deleteKey);
+
 	size--;
 
 	return size >= TotalKeyCount / 2;
@@ -343,8 +345,9 @@ BTreeNodeKey* BTreeNode::GetKey(int data)
 /// 노드 매니저 및 키 매니저를 초기화한다.
 /// </summary>
 BTreeNodeManager::BTreeNodeManager()
+	: nodes(nullptr)
 {
-	BTreeNode::keyManager = new BTreeNodeKeyManager();
+	keyManager = new BTreeNodeKeyManager();
 }
 
 /// <summary>
@@ -359,7 +362,7 @@ BTreeNodeManager::~BTreeNodeManager()
 		delete node;
 	}
 
-	delete BTreeNode::keyManager;
+	delete keyManager;
 }
 
 /// <summary>
@@ -389,6 +392,7 @@ BTreeNode* BTreeNodeManager::Pop()
 	{
 		node = new BTreeNode();
 	}
+	node->keyManager = keyManager;
 
 	return node;
 }
@@ -398,10 +402,10 @@ BTreeNode* BTreeNodeManager::Pop()
 /// </summary>
 BTreeNodeKeyManager::~BTreeNodeKeyManager()
 {
-	while (nodes != nullptr)
+	while (keys != nullptr)
 	{
-		BTreeNodeKey* node{ nodes };
-		nodes = nodes->next;
+		BTreeNodeKey* node{ keys };
+		keys = keys->next;
 		delete node;
 	}
 }
@@ -410,10 +414,10 @@ BTreeNodeKeyManager::~BTreeNodeKeyManager()
 /// 사용 완료한 키를 반환한다.
 /// </summary>
 /// <param name="node">사용 완료한 키</param>
-void BTreeNodeKeyManager::Push(BTreeNodeKey* node)
+void BTreeNodeKeyManager::Push(BTreeNodeKey* key)
 {
-	node->next = nodes;
-	nodes = node;
+	key->next = keys;
+	keys = key;
 }
 
 /// <summary>
@@ -422,11 +426,11 @@ void BTreeNodeKeyManager::Push(BTreeNodeKey* node)
 /// <returns>사용할 키</returns>
 BTreeNodeKey* BTreeNodeKeyManager::Pop()
 {
-	BTreeNodeKey* node{ nodes };
+	BTreeNodeKey* node{ keys };
 
 	if (node != nullptr)
 	{
-		nodes = node->next;
+		keys = node->next;
 		node->Clear();
 	}
 	else
@@ -642,20 +646,30 @@ void BTree::ClearUnderflow(BTreeNode* node)
 		// 인출 가능한 형제가 없는 경우
 		if (!isDone)
 		{
-			BTreeNodeKey* key{ lsKey != nullptr ? lsKey : rsKey };
-			BTreeNode* mergeNode{ MergeNodeWithKey(node, key) };
-			if (key->prev != nullptr)
-			{
-				key->prev->right = mergeNode;
-			}
-			if (key->next != nullptr)
-			{
-				key->next->left = mergeNode;
-			}
+			BTreeNodeKey* key{ rsKey != nullptr ? rsKey : lsKey };
+			BTreeNode* mergeNode{ MergeNodeWithKey(node, lsKey, rsKey) };
 
-			if (!parent->Delete(key))
+			if (key != nullptr)
 			{
-				ClearOverflow(parent);
+				if (key->prev != nullptr)
+				{
+					key->prev->right = mergeNode;
+				}
+				if (key->next != nullptr)
+				{
+					key->next->left = mergeNode;
+				}
+
+				if (parent == _root)
+				{
+					parent->Delete(key);
+					_nodeManager.Push(parent);
+					_root = mergeNode;
+				}
+				else if (!parent->Delete(key))
+				{
+					ClearUnderflow(parent);
+				}
 			}
 		}
 	}
@@ -691,14 +705,35 @@ BTreeNode* BTree::SplitNodeWithKey(BTreeNode* node, BTreeNodeKey* key)
 /// 주어진 키를 기준으로 노드를 병합한다.
 /// </summary>
 /// <param name="node">병합할 노드</param>
-/// <param name="key">기준 키</param>
+/// <param name="lsKey">왼쪽 부모키</param>
+/// <param name="rsKey">오른쪽 부모키</param>
 /// <returns>병합된 노드</returns>
-BTreeNode* BTree::MergeNodeWithKey(BTreeNode* node, BTreeNodeKey* key)
+BTreeNode* BTree::MergeNodeWithKey(BTreeNode* node, BTreeNodeKey* lsKey, BTreeNodeKey* rsKey)
 {
-	// Key 기준으로 왼쪽 서브 노드와 node 병합
-	// Key를 새로 만들어 하나의 노드로 삽입 및 서브 트리, prev, next 등 처리
-	// 
-	return nullptr;
+	BTreeNodeKey* mergeKey{ nullptr };
+	BTreeNode* mergeNode{ nullptr };
+
+	if (rsKey != nullptr)
+	{
+		mergeKey = rsKey;
+		mergeNode = rsKey->right;
+	}
+	else
+	{
+		mergeKey = lsKey;
+		mergeNode = lsKey->left;
+	}
+
+	while (node->size > 0)
+	{
+		BTreeNodeKey* key{ node->GetSmallestKey() };
+		mergeNode->Insert(key);
+	}
+	mergeNode->Insert(mergeKey->value);
+
+	_nodeManager.Push(node);
+
+	return mergeNode;
 }
 #pragma endregion
 

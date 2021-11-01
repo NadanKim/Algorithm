@@ -2,6 +2,7 @@
 #include "../Common.h"
 
 struct BTreeNode;
+class BTreeNodeKeyManager;
 
 /// <summary>
 /// B 트리의 노드에서 사용할 키
@@ -55,7 +56,7 @@ struct BTreeNode
 	BTreeNodeKey* keyRoot;
 	size_t size;
 
-	static BTreeNodeKeyManager* keyManager;
+	BTreeNodeKeyManager* keyManager;
 };
 
 /// <summary>
@@ -72,6 +73,7 @@ public:
 
 private:
 	BTreeNode* nodes;
+	BTreeNodeKeyManager* keyManager;
 };
 
 /// <summary>
@@ -86,7 +88,7 @@ public:
 	BTreeNodeKey* Pop();
 
 private:
-	BTreeNodeKey* nodes;
+	BTreeNodeKey* keys;
 };
 
 /// <summary>
@@ -106,10 +108,7 @@ private:
 	void ClearUnderflow(BTreeNode* node);
 
 	BTreeNode* SplitNodeWithKey(BTreeNode* node, BTreeNodeKey* key);
-	BTreeNode* MergeNodeWithKey(BTreeNode* node, BTreeNodeKey* key);
-	//void Delete(BinarySearchNode* node);
-
-	//BinarySearchNode* GetNode(int data);
+	BTreeNode* MergeNodeWithKey(BTreeNode* node, BTreeNodeKey* lsKey, BTreeNodeKey* rsKey);
 
 private: // For Util Methods
 	BTreeNode* GetProperNodeToInsert(int data);
