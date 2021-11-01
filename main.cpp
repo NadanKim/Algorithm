@@ -13,6 +13,7 @@ int main()
 	for (int i = 0; i < n; i++)
 	{
 		tree.Insert(arr[i]);
+		tree.PrintTree();
 	}
 
 	tree.Delete(5);

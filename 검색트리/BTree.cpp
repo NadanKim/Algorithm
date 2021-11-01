@@ -274,6 +274,11 @@ BTreeNodeKey* BTreeNode::GetBiggestKey()
 			key = key->next;
 		}
 
+		if (key == keyRoot)
+		{
+			keyRoot = nullptr;
+		}
+
 		BTreeNodeKey* prev{ key->prev };
 		if (prev != nullptr)
 		{
@@ -301,6 +306,11 @@ BTreeNodeKey* BTreeNode::GetMiddleKey()
 		{
 			key = key->next;
 			midIdx--;
+		}
+
+		if (key == keyRoot)
+		{
+			keyRoot = keyRoot->next;
 		}
 
 		BTreeNodeKey* prev{ key->prev };
@@ -444,6 +454,14 @@ BTreeNodeKey* BTreeNodeKeyManager::Pop()
 
 #pragma region BTree Public Methods
 /// <summary>
+/// 필요한 값들을 생성한다.
+/// </summary>
+BTree::BTree()
+	: _root(nullptr)
+{
+}
+
+/// <summary>
 /// B 트리가 제거될 때 사용한 모든 노드를 반환한다.
 /// </summary>
 BTree::~BTree()
@@ -524,6 +542,60 @@ void BTree::Delete(int data)
 		ClearUnderflow(node);
 	}
 }
+
+/// <summary>
+/// 트리를 텍스트로 출력한다.
+/// </summary>
+void BTree::PrintTree()
+{
+	std::cout << "\n--------------------\n";
+
+	if (_root == nullptr)
+	{
+		std::cout << "EMPTY TREE";
+	}
+	else
+	{
+		int nodeCount{ 1 };
+		int counter{ 0 };
+
+		_queue.push(_root);
+		while (!_queue.empty())
+		{
+			BTreeNode* node{ _queue.front() };
+			_queue.pop();
+
+			if (counter == nodeCount)
+			{
+				counter = 0;
+				nodeCount *= BTreeNode::TotalKeyCount;
+				std::cout << '\n';
+			}
+
+			BTreeNodeKey* key{ node->keyRoot };
+			if (key->left != nullptr)
+			{
+				_queue.push(key->left);
+			}
+
+			std::cout << '[';
+			while (key != nullptr)
+			{
+				if (key->right != nullptr)
+				{
+					_queue.push(key->right);
+				}
+				std::cout << key->value << (key->next != nullptr ? ", " : "");
+				key = key->next;
+			}
+			std::cout << ']';
+
+			counter++;
+		}
+	}
+
+	std::cout << "\n--------------------\n";
+}
 #pragma endregion
 
 #pragma region BTree Private Methods
@@ -583,7 +655,8 @@ void BTree::ClearOverflow(BTreeNode* node)
 		{
 			BTreeNode* newRootNode{ _nodeManager.Pop() };
 			newRootNode->Insert(key);
-			_root = node;
+			node->parent = newNode->parent = newRootNode;
+			_root = newRootNode;
 		}
 		else if (!parent->Insert(key))
 		{
@@ -752,15 +825,10 @@ BTreeNode* BTree::GetProperNodeToInsert(int data)
 	}
 
 	BTreeNode* node{ _root };
-	BTreeNode* prevNode{ nullptr };
+	BTreeNode* prevNode{ node };
 
 	while (node != nullptr)
 	{
-		if (node->IsAbleToInsert())
-		{
-			return node;
-		}
-
 		BTreeNodeKey* key{ node->keyRoot };
 		while (key != nullptr)
 		{

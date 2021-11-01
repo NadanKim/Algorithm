@@ -1,5 +1,8 @@
 #pragma once
 #include "../Common.h"
+#include <queue>
+
+using std::queue;
 
 struct BTreeNode;
 class BTreeNodeKeyManager;
@@ -31,7 +34,7 @@ struct BTreeNodeKey
 /// </summary>
 struct BTreeNode
 {
-	static const size_t TotalKeyCount{ 2 };
+	static const size_t TotalKeyCount{ 3 };
 
 	~BTreeNode();
 
@@ -97,11 +100,14 @@ private:
 class BTree
 {
 public:
+	BTree();
 	~BTree();
 
 	bool Exists(int data);
 	void Insert(int data);
 	void Delete(int data);
+
+	void PrintTree();
 
 private:
 	void ClearOverflow(BTreeNode* node);
@@ -117,4 +123,5 @@ private: // For Util Methods
 private:
 	BTreeNode* _root;
 	BTreeNodeManager _nodeManager;
+	queue<BTreeNode*> _queue;
 };
