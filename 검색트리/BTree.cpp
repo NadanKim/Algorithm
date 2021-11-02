@@ -254,6 +254,7 @@ BTreeNodeKey* BTreeNode::GetSmallestKey()
 		key = keyRoot;
 		keyRoot = keyRoot->next;
 		keyRoot->prev = nullptr;
+		key->next = nullptr;
 	}
 	size--;
 	return key;
