@@ -174,6 +174,7 @@ bool BTreeNode::Delete(int data)
 		{
 			return Delete(key);
 		}
+		key = key->next;
 	}
 
 	return false;
@@ -871,6 +872,7 @@ BTreeNode* BTree::GetProperNodeToDelete(int data)
 		if (node->IsContainsData(data))
 		{
 			BTreeNodeKey* key{ node->GetKey(data) };
+			leafNode = node;
 			while (key->right != nullptr)
 			{
 				leafNode = key->right;
@@ -878,9 +880,29 @@ BTreeNode* BTree::GetProperNodeToDelete(int data)
 			}
 			break;
 		}
+
+		BTreeNodeKey* key{ node->keyRoot };
+		while (key != nullptr)
+		{
+			if (data < key->value)
+			{
+				node = key->left;
+				break;
+			}
+			else if (key->value < data)
+			{
+				if (key->next == nullptr || data < key->next->value)
+				{
+					node = key->right;
+					break;
+				}
+			}
+
+			key = key->next;
+		}
 	}
 
-	if (leafNode != nullptr)
+	if (leafNode != nullptr && leafNode != node)
 	{
 		BTreeNodeKey* key{ node->GetKey(data) };
 		BTreeNodeKey* leafKey{ leafNode->GetSmallestKey() };

@@ -17,10 +17,13 @@ int main()
 	}
 
 	tree.Delete(5);
+	tree.PrintTree();
 
 	tree.Delete(10);
+	tree.PrintTree();
 
 	tree.Delete(15);
+	tree.PrintTree();
 
 	delete[] arr;
 }
