@@ -25,5 +25,23 @@ int main()
 	tree.Delete(15);
 	tree.PrintTree();
 
+	tree.Delete(1);
+	tree.PrintTree();
+
+	tree.Delete(3);
+	tree.PrintTree();
+
+	tree.Delete(20);
+	tree.PrintTree();
+
+	tree.Delete(7);
+	tree.PrintTree();
+
+	tree.Delete(4);
+	tree.PrintTree();
+
+	tree.Delete(25);
+	tree.PrintTree();
+
 	delete[] arr;
 }

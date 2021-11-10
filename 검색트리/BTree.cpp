@@ -199,6 +199,11 @@ bool BTreeNode::Delete(BTreeNodeKey* deleteKey)
 		nextKey->prev = prevKey;
 	}
 
+	if (deleteKey == keyRoot)
+	{
+		keyRoot = nextKey;
+	}
+
 	keyManager->Push(deleteKey);
 
 	size--;
@@ -558,6 +563,7 @@ void BTree::PrintTree()
 	}
 	else
 	{
+		int depth{ 0 };
 		int nodeCount{ 1 };
 		int counter{ 0 };
 
@@ -569,8 +575,9 @@ void BTree::PrintTree()
 
 			if (counter == nodeCount)
 			{
+				depth++;
 				counter = 0;
-				nodeCount *= BTreeNode::TotalKeyCount;
+				nodeCount = depth * BTreeNode::TotalKeyCount + 1;
 				std::cout << '\n';
 			}
 
@@ -699,7 +706,7 @@ void BTree::ClearUnderflow(BTreeNode* node)
 			rsKey = rsKey->next;
 		}
 
-		// 왼쪽 형제가 존재하고 삽입 가능한 경우
+		// 왼쪽 형제가 존재하고 키 인출 가능한 경우
 		if (lsKey != nullptr && lsKey->left != nullptr
 			&& lsKey->left->IsAbleToWithdraw())
 		{
@@ -708,7 +715,7 @@ void BTree::ClearUnderflow(BTreeNode* node)
 			node->Insert(key);
 			isDone = true;
 		}
-		// 오른쪽 형제가 존재하고 삽입 가능한 경우
+		// 오른쪽 형제가 존재하고 키 인출 가능한 경우
 		else if (rsKey != nullptr && rsKey->right != nullptr
 			&& rsKey->right->IsAbleToWithdraw())
 		{
@@ -735,7 +742,7 @@ void BTree::ClearUnderflow(BTreeNode* node)
 					key->next->left = mergeNode;
 				}
 
-				if (parent == _root)
+				if (parent == _root && _root->size == 1)
 				{
 					parent->Delete(key);
 					_nodeManager.Push(parent);
@@ -876,7 +883,7 @@ BTreeNode* BTree::GetProperNodeToDelete(int data)
 			while (key->right != nullptr)
 			{
 				leafNode = key->right;
-				key = leafNode->GetSmallestKey();
+				key = leafNode->keyRoot;
 			}
 			break;
 		}
@@ -905,7 +912,7 @@ BTreeNode* BTree::GetProperNodeToDelete(int data)
 	if (leafNode != nullptr && leafNode != node)
 	{
 		BTreeNodeKey* key{ node->GetKey(data) };
-		BTreeNodeKey* leafKey{ leafNode->GetSmallestKey() };
+		BTreeNodeKey* leafKey{ leafNode->keyRoot };
 		key->SwapValue(leafKey);
 		node = leafNode;
 	}
