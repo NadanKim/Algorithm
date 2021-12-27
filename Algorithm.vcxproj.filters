@@ -15,6 +15,9 @@
     <ClCompile Include="검색트리\BTree.cpp">
       <Filter>검색트리</Filter>
     </ClCompile>
+    <ClCompile Include="해시테이블\HashTable.cpp">
+      <Filter>해시테이블</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="정렬">
@@ -25,6 +28,9 @@
     </Filter>
     <Filter Include="검색트리">
       <UniqueIdentifier>{57783ce5-661c-440a-b54d-1e8b0a28059e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="해시테이블">
+      <UniqueIdentifier>{53bd8b0d-12a2-45fe-98ae-75dfbb6e5d2b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -64,6 +70,9 @@
     </ClInclude>
     <ClInclude Include="검색트리\BTree.h">
       <Filter>검색트리</Filter>
+    </ClInclude>
+    <ClInclude Include="해시테이블\HashTable.h">
+      <Filter>해시테이블</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

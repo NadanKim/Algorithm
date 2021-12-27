@@ -25,6 +25,7 @@
     <ClCompile Include="검색트리\BinarySearchTree.cpp" />
     <ClCompile Include="검색트리\BTree.cpp" />
     <ClCompile Include="검색트리\RedBlackTree.cpp" />
+    <ClCompile Include="해시테이블\HashTable.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h" />
@@ -40,6 +41,7 @@
     <ClInclude Include="정렬\MergeSort.hpp" />
     <ClInclude Include="정렬\QuickSort.hpp" />
     <ClInclude Include="정렬\SelectionSort.hpp" />
+    <ClInclude Include="해시테이블\HashTable.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
