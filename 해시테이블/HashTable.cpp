@@ -6,8 +6,10 @@
 /// </summary>
 void HashTable::PrintHashTable()
 {
-	std::cout << "--- " << typeid(this).name() << " ---\n";
-	std::cout << "- HashFuncion : " << GetHashFunctionString() << "---\n";
+	std::cout << "------------------------------------------\n";
+	std::cout << "- Class Name  : " << typeid(this).name() << '\n';
+	std::cout << "- HashFuncion : " << GetHashFunctionString() << '\n';
+	std::cout << "------------------------------------------\n";
 }
 #pragma endregion
 

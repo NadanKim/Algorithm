@@ -18,7 +18,7 @@ enum class HashFunction
 class HashTable
 {
 public:
-	HashTable(HashFunction hashFunction) : m_hashFunction(hashFunction), m_size(Default_Table_Size){};
+	HashTable(HashFunction hashFunction = HashFunction::Division) : m_hashFunction(hashFunction) { m_size = Default_Table_Size; };
 
 	virtual void Add(int data) = 0;
 	virtual void Remove(int data) = 0;
@@ -42,7 +42,5 @@ private:
 	HashFunction m_hashFunction;
 	int m_size;
 
-	static int Default_Table_Size;
+	static const int Default_Table_Size{ 17 };
 };
-
-int HashTable::Default_Table_Size = 17;
