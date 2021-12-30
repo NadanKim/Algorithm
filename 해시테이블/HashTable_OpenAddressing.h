@@ -13,7 +13,7 @@ using std::list;
 class HashTable_OpenAddressing : public HashTable
 {
 public:
-	HashTable_OpenAddressing(HashFunction hashFunction = HashFunction::Division) : HashTable(hashFunction) {}
+	HashTable_OpenAddressing(HashFunction hashFunction = HashFunction::Division);
 
 	virtual void Add(int data) override;
 	virtual void Remove(int data) override;
@@ -21,6 +21,9 @@ public:
 	virtual void Clear() override;
 
 	virtual void PrintHashTable() override;
+
+private:
+	virtual bool IsCollided(int idx);
 
 protected:
 	virtual int GetHashIndex(int data);
@@ -30,5 +33,6 @@ protected:
 private:
 	vector<int> m_table;
 
+	static const int Empty = INT_MAX;
 	static const int Deleted_Data = -INT_MAX;
 };

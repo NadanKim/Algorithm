@@ -2,6 +2,19 @@
 
 #pragma region Public Functions
 /// <summary>
+/// 해시 함수를 결정하고 해시 테이블을 초기화한다.
+/// </summary>
+/// <param name="hashFunction">사용할 해시 함수</param>
+HashTable_OpenAddressing::HashTable_OpenAddressing(HashFunction hashFunction)
+	: HashTable(hashFunction)
+{
+	for (int i = 0, total = Size(); i < total; i++)
+	{
+		m_table.push_back(Empty);
+	}
+}
+
+/// <summary>
 /// 데이터를 해시 테이블에 추가한다.
 /// </summary>
 /// <param name="data">추가할 데이터</param>
@@ -40,7 +53,7 @@ bool HashTable_OpenAddressing::Contains(int data)
 {
 	int idx{ GetHashIndex(data) };
 
-	return m_table[idx] == data || m_table[idx] == Deleted_Data;
+	return m_table[idx] == data;
 }
 
 /// <summary>
@@ -94,6 +107,19 @@ void HashTable_OpenAddressing::PrintHashTable()
 }
 #pragma endregion
 
+#pragma region Private Functions
+/// <summary>
+/// 주어진 인덱스에 값이 존재하여 충돌이 발생하는지 여부를 반환한다.
+/// </summary>
+/// <param name="idx">확인할 인덱스</param>
+/// <returns>충돌 여부</returns>
+bool HashTable_OpenAddressing::IsCollided(int idx)
+{
+	return m_table[idx] != Empty;
+}
+#pragma endregion
+
+
 #pragma region Protected Functions
 /// <summary>
 /// 개방 주소 방법을 통해 적절한 인덱스를 반환한다.
@@ -104,7 +130,7 @@ int HashTable_OpenAddressing::GetHashIndex(int data)
 {
 	int idx{ HashTable::GetHashIndex(data) };
 
-	if (Contains(data))
+	if (IsCollided(data))
 	{
 		idx = GetProperHashIndex(idx, data);
 	}
