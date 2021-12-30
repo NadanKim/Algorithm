@@ -21,6 +21,9 @@
     <ClCompile Include="해시테이블\HashTable_Chaining.cpp">
       <Filter>해시테이블</Filter>
     </ClCompile>
+    <ClCompile Include="해시테이블\HashTable_OpenAddressing.cpp">
+      <Filter>해시테이블</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="정렬">
@@ -78,6 +81,9 @@
       <Filter>해시테이블</Filter>
     </ClInclude>
     <ClInclude Include="해시테이블\HashTable_Chaining.h">
+      <Filter>해시테이블</Filter>
+    </ClInclude>
+    <ClInclude Include="해시테이블\HashTable_OpenAddressing.h">
       <Filter>해시테이블</Filter>
     </ClInclude>
   </ItemGroup>

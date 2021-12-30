@@ -27,6 +27,7 @@
     <ClCompile Include="검색트리\RedBlackTree.cpp" />
     <ClCompile Include="해시테이블\HashTable.cpp" />
     <ClCompile Include="해시테이블\HashTable_Chaining.cpp" />
+    <ClCompile Include="해시테이블\HashTable_OpenAddressing.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common.h" />
@@ -44,6 +45,7 @@
     <ClInclude Include="정렬\SelectionSort.hpp" />
     <ClInclude Include="해시테이블\HashTable.h" />
     <ClInclude Include="해시테이블\HashTable_Chaining.h" />
+    <ClInclude Include="해시테이블\HashTable_OpenAddressing.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

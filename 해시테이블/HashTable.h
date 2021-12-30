@@ -34,7 +34,7 @@ private:
 	std::string GetHashFunctionString();
 
 protected:
-	int GetHashIndex(int data);
+	virtual int GetHashIndex(int data);
 
 	int Size() { return m_size; }
 
