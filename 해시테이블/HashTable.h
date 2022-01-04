@@ -3,6 +3,8 @@
 #include <cmath>
 #include <string>
 
+using std::string;
+
 /// <summary>
 /// 해시 테이블에서 사용할 해시 함수
 /// </summary>
@@ -25,13 +27,15 @@ public:
 	virtual bool Contains(int data) = 0;
 	virtual void Clear() = 0;
 
-	virtual void PrintHashTable();
+	virtual void Resize();
+
+	virtual void PrintHashTable(string hashTableName = "HashTable");
 
 private:
 	int GetHashIndexByDivision(int data);
 	int GetHashIndexByMultiplication(int data);
 
-	std::string GetHashFunctionString();
+	string GetHashFunctionString();
 
 protected:
 	virtual int GetHashIndex(int data);

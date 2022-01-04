@@ -8,10 +8,7 @@
 HashTable_OpenAddressing::HashTable_OpenAddressing(HashFunction hashFunction)
 	: HashTable(hashFunction)
 {
-	for (int i = 0, total = Size(); i < total; i++)
-	{
-		m_table.push_back(Empty);
-	}
+	ResetTable();
 }
 
 /// <summary>
@@ -27,6 +24,13 @@ void HashTable_OpenAddressing::Add(int data)
 
 	int idx{ GetHashIndex(data) };
 	m_table[idx] = data;
+
+	m_usedCount++;
+
+	if (NeedToResize())
+	{
+		Resize();
+	}
 }
 
 /// <summary>
@@ -41,7 +45,7 @@ void HashTable_OpenAddressing::Remove(int data)
 	}
 
 	int idx{ GetHashIndex(data) };
-	m_table[idx] = Deleted_Data;
+	m_table[idx] = Deleted;
 }
 
 /// <summary>
@@ -65,41 +69,54 @@ void HashTable_OpenAddressing::Clear()
 }
 
 /// <summary>
+/// 해시 테이블의 크기를 조정하고 데이터를 다시 해싱한다.
+/// </summary>
+void HashTable_OpenAddressing::Resize()
+{
+	vector<int> oldData;
+	oldData.reserve(Size());
+
+	for (int i = 0; i < Size(); i++)
+	{
+		if (m_table[i] != Empty && m_table[i] != Deleted)
+		{
+			oldData.emplace_back(m_table[i]);
+		}
+	}
+
+	HashTable::Resize();
+	ResetTable();
+
+	int oldDataCount = static_cast<int>(oldData.size());
+	for (int i = 0; i < oldDataCount; i++)
+	{
+		Add(oldData[i]);
+	}
+
+	m_usedCount = oldDataCount;
+}
+
+/// <summary>
 /// 해시 테이블의 현 상태를 출력한다.
 /// </summary>
-void HashTable_OpenAddressing::PrintHashTable()
+void HashTable_OpenAddressing::PrintHashTable(string hashTableName)
 {
-	HashTable::PrintHashTable();
+	HashTable::PrintHashTable(hashTableName);
 
 	for (int i = 0, total = Size(); i < total; i++)
 	{
 		std::cout << " Index " << i << " : ";
-		if (m_table.size() > 0)
+		if (m_table[i] == Deleted)
 		{
-			auto d = m_table.cbegin();
-			while (true)
-			{
-				if (*d == Deleted_Data)
-				{
-					std::cout << "Deleted";
-				}
-				else
-				{
-					std::cout << *d;
-				}
-				d++;
-
-				if (d == m_table.cend())
-				{
-					break;
-				}
-
-				std::cout << " - ";
-			}
+			std::cout << "Deleted";
+		}
+		else if (m_table[i] == Empty)
+		{
+			std::cout << "Empty";
 		}
 		else
 		{
-			std::cout << "EMPTY";
+			std::cout << m_table[i];
 		}
 		std::cout << '\n';
 	}
@@ -117,6 +134,28 @@ bool HashTable_OpenAddressing::IsCollided(int idx)
 {
 	return m_table[idx] != Empty;
 }
+
+/// <summary>
+/// 리사이즈가 필요한지 여부를 반환한다.
+/// </summary>
+/// <returns>리사이즈 필요 여부</returns>
+bool HashTable_OpenAddressing::NeedToResize()
+{
+	return m_usedCount > LimitCount();
+}
+
+/// <summary>
+/// 테이블을 초기화한다.
+/// </summary>
+void HashTable_OpenAddressing::ResetTable()
+{
+	m_table.clear();
+	for (int i = 0, total = Size(); i < total; i++)
+	{
+		m_table.push_back(Empty);
+	}
+
+}
 #pragma endregion
 
 
@@ -130,7 +169,7 @@ int HashTable_OpenAddressing::GetHashIndex(int data)
 {
 	int idx{ HashTable::GetHashIndex(data) };
 
-	if (IsCollided(data))
+	if (IsCollided(idx))
 	{
 		idx = GetProperHashIndex(idx, data);
 	}

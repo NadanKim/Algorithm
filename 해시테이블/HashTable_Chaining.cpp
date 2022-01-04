@@ -76,9 +76,9 @@ void HashTable_Chaining::Clear()
 /// <summary>
 /// 해시 테이블의 현 상태를 출력한다.
 /// </summary>
-void HashTable_Chaining::PrintHashTable()
+void HashTable_Chaining::PrintHashTable(string hashTableName)
 {
-	HashTable::PrintHashTable();
+	HashTable::PrintHashTable(hashTableName);
 
 	for (int i = 0, total = Size(); i < total; i++)
 	{
@@ -101,7 +101,7 @@ void HashTable_Chaining::PrintHashTable()
 		}
 		else
 		{
-			std::cout << "EMPTY";
+			std::cout << "Empty";
 		}
 		std::cout << '\n';
 	}

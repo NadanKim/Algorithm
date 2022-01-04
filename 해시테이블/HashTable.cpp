@@ -4,12 +4,20 @@
 /// <summary>
 /// 해시 테이블의 현 상태를 출력한다.
 /// </summary>
-void HashTable::PrintHashTable()
+void HashTable::PrintHashTable(string hashTableName)
 {
 	std::cout << "------------------------------------------\n";
-	std::cout << "- Class Name  : " << typeid(this).name() << '\n';
+	std::cout << "- Class Name  : " << hashTableName << '\n';
 	std::cout << "- HashFuncion : " << GetHashFunctionString() << '\n';
 	std::cout << "------------------------------------------\n";
+}
+
+/// <summary>
+/// 해시 테이블의 크기를 조정한다.
+/// </summary>
+void HashTable::Resize()
+{
+	m_size *= 2;
 }
 #pragma endregion
 

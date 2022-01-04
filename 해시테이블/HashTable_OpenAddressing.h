@@ -20,19 +20,28 @@ public:
 	virtual bool Contains(int data) override;
 	virtual void Clear() override;
 
-	virtual void PrintHashTable() override;
+	virtual void Resize() override;
+
+	virtual void PrintHashTable(string hashTableName = "HashTable_OpenAddressing") override;
 
 private:
-	virtual bool IsCollided(int idx);
+	bool IsCollided(int idx);
+	bool NeedToResize();
+
+	void ResetTable();
+
+	int LimitCount() { return Size() * 3 / 4; }
 
 protected:
-	virtual int GetHashIndex(int data);
+	virtual int GetHashIndex(int data) override;
 
 	virtual int GetProperHashIndex(int idx, int data) = 0;
 
-private:
+protected:
 	vector<int> m_table;
 
-	static const int Empty = INT_MAX;
-	static const int Deleted_Data = -INT_MAX;
+	int m_usedCount{ 0 };
+
+	static const int Empty{ INT_MAX };
+	static const int Deleted{ -INT_MAX };
 };

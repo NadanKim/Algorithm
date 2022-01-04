@@ -20,7 +20,7 @@ public:
 	virtual bool Contains(int data) override;
 	virtual void Clear() override;
 
-	virtual void PrintHashTable() override;
+	virtual void PrintHashTable(string hashTableName = "HashTable_Chaining") override;
 
 private:
 	vector<list<int>> m_table;
