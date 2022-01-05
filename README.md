@@ -21,5 +21,5 @@
   * [체이닝(Chaining)](https://github.com/NadanKim/Algorithm/blob/main/%ED%95%B4%EC%8B%9C%ED%85%8C%EC%9D%B4%EB%B8%94/HashTable_Chaining.cpp)   
   * [개방주소 방법(Open Addressing)](https://github.com/NadanKim/Algorithm/blob/main/%ED%95%B4%EC%8B%9C%ED%85%8C%EC%9D%B4%EB%B8%94/HashTable_OpenAddressing.cpp)   
     * [선형 조사(Linear Probing)](https://github.com/NadanKim/Algorithm/blob/main/%ED%95%B4%EC%8B%9C%ED%85%8C%EC%9D%B4%EB%B8%94/HashTable_OpenAddressing_LinearProbing.cpp)   
-    * 이차원 조사(Quadratic Probing)   
+    * [이차원 조사(Quadratic Probing)](https://github.com/NadanKim/Algorithm/blob/main/%ED%95%B4%EC%8B%9C%ED%85%8C%EC%9D%B4%EB%B8%94/HashTable_OpenAddressing_QuadraticProbing.cpp)   
     * 더블 해싱(Double Hashing)   
