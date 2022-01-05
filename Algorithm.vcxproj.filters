@@ -27,6 +27,9 @@
     <ClCompile Include="해시테이블\HashTable_OpenAddressing_LinearProbing.cpp">
       <Filter>해시테이블</Filter>
     </ClCompile>
+    <ClCompile Include="해시테이블\HashTable_OpenAddressing_QuadraticProbing.cpp">
+      <Filter>해시테이블</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="정렬">
@@ -90,6 +93,9 @@
       <Filter>해시테이블</Filter>
     </ClInclude>
     <ClInclude Include="해시테이블\HashTable_OpenAddressing_LinearProbing.h">
+      <Filter>해시테이블</Filter>
+    </ClInclude>
+    <ClInclude Include="해시테이블\HashTable_OpenAddressing_QuadraticProbing.h">
       <Filter>해시테이블</Filter>
     </ClInclude>
   </ItemGroup>

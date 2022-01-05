@@ -1,9 +1,9 @@
 ﻿#include "Common.h"
-#include "해시테이블/HashTable_OpenAddressing_LinearProbing.h"
+#include "해시테이블/HashTable_OpenAddressing_QuadraticProbing.h"
 
 int main()
 {
-	HashTable_OpenAddressing_LinearProbing hashTable;
+	HashTable_OpenAddressing_QuadraticProbing hashTable;
 
 	int arr[] = { 1, 3, 5, 7, 9,
 		12, 14, 16, 18, 20,
