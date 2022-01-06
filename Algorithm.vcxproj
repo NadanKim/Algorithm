@@ -28,6 +28,7 @@
     <ClCompile Include="해시테이블\HashTable.cpp" />
     <ClCompile Include="해시테이블\HashTable_Chaining.cpp" />
     <ClCompile Include="해시테이블\HashTable_OpenAddressing.cpp" />
+    <ClCompile Include="해시테이블\HashTable_OpenAddressing_DoubleHashing.cpp" />
     <ClCompile Include="해시테이블\HashTable_OpenAddressing_LinearProbing.cpp" />
     <ClCompile Include="해시테이블\HashTable_OpenAddressing_QuadraticProbing.cpp" />
   </ItemGroup>
@@ -48,6 +49,7 @@
     <ClInclude Include="해시테이블\HashTable.h" />
     <ClInclude Include="해시테이블\HashTable_Chaining.h" />
     <ClInclude Include="해시테이블\HashTable_OpenAddressing.h" />
+    <ClInclude Include="해시테이블\HashTable_OpenAddressing_DoubleHashing.h" />
     <ClInclude Include="해시테이블\HashTable_OpenAddressing_LinearProbing.h" />
     <ClInclude Include="해시테이블\HashTable_OpenAddressing_QuadraticProbing.h" />
   </ItemGroup>

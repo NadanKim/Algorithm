@@ -71,4 +71,19 @@ int HashTable::GetHashIndex(int data)
 	}
 	return GetHashIndexByDivision(data);
 }
+
+/// <summary>
+/// 주어진 데이터를 이용하여 해쉬 인덱스를 생성해 반환한다.
+/// </summary>
+/// <param name="data">인덱스를 찾을 데이터</param>
+/// <param name="hashFunction">사용할 해쉬 함수</param>
+/// <returns>해쉬 테이블에서의 인덱스</returns>
+int HashTable::GetHashIndex(int data, HashFunction hashFunction)
+{
+	if (hashFunction == HashFunction::Multiplication)
+	{
+		return GetHashIndexByMultiplication(data);
+	}
+	return GetHashIndexByDivision(data);
+}
 #pragma endregion

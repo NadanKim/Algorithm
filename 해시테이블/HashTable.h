@@ -40,7 +40,10 @@ private:
 protected:
 	virtual int GetHashIndex(int data);
 
+	int GetHashIndex(int data, HashFunction hashFunction);
+
 	int Size() { return m_size; }
+	HashFunction CurrentHashFunction() { return m_hashFunction; }
 
 private:
 	HashFunction m_hashFunction;
