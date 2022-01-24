@@ -33,6 +33,9 @@
     <ClCompile Include="해시테이블\HashTable_OpenAddressing_DoubleHashing.cpp">
       <Filter>해시테이블</Filter>
     </ClCompile>
+    <ClCompile Include="그래프\Graph.cpp">
+      <Filter>그래프</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="정렬">
@@ -46,6 +49,9 @@
     </Filter>
     <Filter Include="해시테이블">
       <UniqueIdentifier>{53bd8b0d-12a2-45fe-98ae-75dfbb6e5d2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="그래프">
+      <UniqueIdentifier>{46bd464d-65b2-4d70-ac7d-c2f71cda6135}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -103,6 +109,9 @@
     </ClInclude>
     <ClInclude Include="해시테이블\HashTable_OpenAddressing_DoubleHashing.h">
       <Filter>해시테이블</Filter>
+    </ClInclude>
+    <ClInclude Include="그래프\Graph.h">
+      <Filter>그래프</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
