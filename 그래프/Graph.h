@@ -45,7 +45,7 @@ public:
 
 	virtual void AddNode(string name);
 	virtual void AddEdge(string from, string to, int weight = 1) = 0;
-	virtual void RemoveNode(string name) = 0;
+	virtual void RemoveNode(string name);
 	virtual void RemoveEdge(string from, string to) = 0;
 	virtual void Clear() = 0;
 
@@ -59,7 +59,7 @@ private:
 	string GetGraphTraversalString(GraphTraversal graphTraversal);
 
 protected:
-	GraphOption CurrentHashFunction() { return m_graphOption; }
+	GraphOption CurrentGraphOption() { return m_graphOption; }
 
 private:
 	GraphOption m_graphOption;

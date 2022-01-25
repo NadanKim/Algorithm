@@ -25,6 +25,27 @@ void Graph::AddNode(string name)
 }
 
 /// <summary>
+/// 그래프에서 노드를 제거한다.
+/// </summary>
+/// <param name="name">제거할 노드 이름</param>
+void Graph::RemoveNode(string name)
+{
+	if (!Exists(name))
+	{
+		return;
+	}
+
+	for (size_t total = m_graphNodeList.size(), i = 0; i < total; i++)
+	{
+		if (m_graphNodeList[i].name == name)
+		{
+			m_graphNodeList[i].name = "";
+			break;
+		}
+	}
+}
+
+/// <summary>
 /// 해시 테이블의 현 상태를 출력한다.
 /// </summary>
 void Graph::PrintGraph(GraphTraversal graphTraversal, string graphName)

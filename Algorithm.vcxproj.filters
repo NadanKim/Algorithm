@@ -36,6 +36,9 @@
     <ClCompile Include="그래프\Graph.cpp">
       <Filter>그래프</Filter>
     </ClCompile>
+    <ClCompile Include="그래프\Graph_AdjacencyMatrix.cpp">
+      <Filter>그래프</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="정렬">
@@ -111,6 +114,9 @@
       <Filter>해시테이블</Filter>
     </ClInclude>
     <ClInclude Include="그래프\Graph.h">
+      <Filter>그래프</Filter>
+    </ClInclude>
+    <ClInclude Include="그래프\Graph_AdjacencyMatrix.h">
       <Filter>그래프</Filter>
     </ClInclude>
   </ItemGroup>

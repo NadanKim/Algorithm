@@ -26,6 +26,7 @@
     <ClCompile Include="검색트리\BTree.cpp" />
     <ClCompile Include="검색트리\RedBlackTree.cpp" />
     <ClCompile Include="그래프\Graph.cpp" />
+    <ClCompile Include="그래프\Graph_AdjacencyMatrix.cpp" />
     <ClCompile Include="해시테이블\HashTable.cpp" />
     <ClCompile Include="해시테이블\HashTable_Chaining.cpp" />
     <ClCompile Include="해시테이블\HashTable_OpenAddressing.cpp" />
@@ -40,6 +41,7 @@
     <ClInclude Include="검색트리\BTree.h" />
     <ClInclude Include="검색트리\RedBlackTree.h" />
     <ClInclude Include="그래프\Graph.h" />
+    <ClInclude Include="그래프\Graph_AdjacencyMatrix.h" />
     <ClInclude Include="선택\AvgNSelection.hpp" />
     <ClInclude Include="선택\LinearSelection.hpp" />
     <ClInclude Include="정렬\BubbleSort.hpp" />
