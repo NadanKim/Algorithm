@@ -43,16 +43,16 @@ class Graph
 public:
 	Graph(GraphOption graphOption = GraphOption::Undirected) : m_graphOption(graphOption) {};
 
-	virtual void AddNode(string name);
+	virtual bool AddNode(string name);
 	virtual void AddEdge(string from, string to, int weight = 1) = 0;
-	virtual void RemoveNode(string name);
+	virtual bool RemoveNode(string name);
 	virtual void RemoveEdge(string from, string to) = 0;
 	virtual void Clear() = 0;
 
 	virtual void PrintGraph(GraphTraversal graphTraversal = GraphTraversal::BFS, string graphName = "Graph");
 
 	bool Exists(string name);
-	int GetNodeIndex(string name);
+	size_t GetNodeIndex(string name);
 
 private:
 	string GetGraphOptionString();
@@ -60,6 +60,7 @@ private:
 
 protected:
 	GraphOption CurrentGraphOption() { return m_graphOption; }
+	size_t GetNodeCount() { return m_graphNodeList.size(); }
 
 private:
 	GraphOption m_graphOption;

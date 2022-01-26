@@ -5,44 +5,50 @@
 /// 그래프에 노드를 추가한다.
 /// </summary>
 /// <param name="name">추가할 노드 이름</param>
-void Graph::AddNode(string name)
+/// <returns>성공 여부</returns>
+bool Graph::AddNode(string name)
 {
 	if (Exists(name))
 	{
-		return;
+		return false;
 	}
 
+	bool isAdded{ false };
 	for (size_t total = m_graphNodeList.size(), i = 0; i < total; i++)
 	{
 		if (m_graphNodeList[i].name == "")
 		{
 			m_graphNodeList[i].name = name;
-			return;
+			isAdded = true;
+			break;
 		}
 	}
 
-	m_graphNodeList.push_back(GraphNode(name));
+	if (!isAdded)
+	{
+		m_graphNodeList.push_back(GraphNode(name));
+	}
+
+	return true;
 }
 
 /// <summary>
 /// 그래프에서 노드를 제거한다.
 /// </summary>
 /// <param name="name">제거할 노드 이름</param>
-void Graph::RemoveNode(string name)
+/// <returns>성공 여부</returns>
+bool Graph::RemoveNode(string name)
 {
-	if (!Exists(name))
-	{
-		return;
-	}
-
 	for (size_t total = m_graphNodeList.size(), i = 0; i < total; i++)
 	{
 		if (m_graphNodeList[i].name == name)
 		{
 			m_graphNodeList[i].name = "";
-			break;
+			return true;
 		}
 	}
+
+	return false;
 }
 
 /// <summary>
@@ -105,13 +111,13 @@ bool Graph::Exists(string name)
 /// </summary>
 /// <param name="name">검색할 노드의 이름</param>
 /// <returns>노드의 인덱스(없으면 -1)</returns>
-int Graph::GetNodeIndex(string name)
+size_t Graph::GetNodeIndex(string name)
 {
 	for (size_t total = m_graphNodeList.size(), i = 0; i < total; i++)
 	{
 		if (m_graphNodeList[i].name == name)
 		{
-			return static_cast<int>(i);
+			return i;
 		}
 	}
 	return -1;
