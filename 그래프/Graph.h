@@ -47,7 +47,7 @@ public:
 	virtual void AddEdge(string from, string to, int weight = 1) = 0;
 	virtual bool RemoveNode(string name);
 	virtual void RemoveEdge(string from, string to) = 0;
-	virtual void Clear() = 0;
+	virtual void Clear();
 
 	virtual void PrintGraph(GraphTraversal graphTraversal = GraphTraversal::BFS, string graphName = "Graph");
 

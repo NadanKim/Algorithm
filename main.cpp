@@ -1,29 +1,19 @@
 ﻿#include "Common.h"
-#include "해시테이블/HashTable_OpenAddressing_DoubleHashing.h"
+#include "그래프/Graph_AdjacencyMatrix.h"
 
 int main()
 {
-	HashTable_OpenAddressing_DoubleHashing hashTable;
+	Graph_AdjacencyMatrix graph;
 
-	int arr[] = { 1, 3, 5, 7, 9,
-		12, 14, 16, 18, 20,
-		23, 25, 27, 29,
-		32, 34, 36, 38,
-		40, 43, 45, 47, 49,
-	    11, 21, 31, 41 ,51,
-	    61, 71, 81, 91, 2 
-	};
+	graph.AddNode("First");
+	graph.AddNode("Second");
+	graph.AddNode("Third");
+	graph.AddNode("Etc");
 
-	for (int i = 0; i < 33; i++)
-	{
-		hashTable.Add(arr[i]);
-	}
+	graph.AddEdge("First", "Second");
+	graph.AddEdge("Second", "Third");
+	graph.AddEdge("Etc", "First");
+	graph.AddEdge("Etc", "Third");
 
-	hashTable.PrintHashTable();
-
-	hashTable.Remove(16);
-	hashTable.Remove(27);
-	hashTable.Remove(47);
-
-	hashTable.PrintHashTable();
+	graph.PrintGraph();
 }

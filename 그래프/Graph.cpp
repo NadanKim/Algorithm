@@ -52,6 +52,17 @@ bool Graph::RemoveNode(string name)
 }
 
 /// <summary>
+/// 그래프를 초기화한다.
+/// </summary>
+void Graph::Clear()
+{
+	for (size_t total = m_graphNodeList.size(), i = 0; i < total; i++)
+	{
+		m_graphNodeList[i].name = "";
+	}
+}
+
+/// <summary>
 /// 해시 테이블의 현 상태를 출력한다.
 /// </summary>
 void Graph::PrintGraph(GraphTraversal graphTraversal, string graphName)

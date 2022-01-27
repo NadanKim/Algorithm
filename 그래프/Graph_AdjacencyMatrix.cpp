@@ -40,6 +40,27 @@ bool Graph_AdjacencyMatrix::AddNode(string name)
 }
 
 /// <summary>
+/// 그래프에 에지를 추가한다.
+/// </summary>
+/// <param name="from">시작 노드</param>
+/// <param name="to">끝 노드</param>
+/// <param name="weight">가중치(기본: 1)</param>
+void Graph_AdjacencyMatrix::AddEdge(string from, string to, int weight)
+{
+	size_t fromIdx{ GetNodeIndex(from) }, toIdx{ GetNodeIndex(to) };
+
+	if (fromIdx != -1 && toIdx != -1)
+	{
+		m_matrix[fromIdx][toIdx] = weight;
+
+		if (CurrentGraphOption() == GraphOption::Undirected)
+		{
+			m_matrix[toIdx][fromIdx] = weight;
+		}
+	}
+}
+
+/// <summary>
 /// 그래프에서 노드를 제거한다.
 /// </summary>
 /// <param name="name">제거할 노드 이름</param>
@@ -63,11 +84,46 @@ bool Graph_AdjacencyMatrix::RemoveNode(string name)
 }
 
 /// <summary>
+/// 그래프에서 에지를 제거한다.
+/// </summary>
+/// <param name="from">시작 노드</param>
+/// <param name="to">끝 노드</param>
+void Graph_AdjacencyMatrix::RemoveEdge(string from, string to)
+{
+	size_t fromIdx{ GetNodeIndex(from) }, toIdx{ GetNodeIndex(to) };
+
+	if (fromIdx != -1 && toIdx != -1)
+	{
+		m_matrix[fromIdx][toIdx] = 0;
+
+		if (CurrentGraphOption() == GraphOption::Undirected)
+		{
+			m_matrix[toIdx][fromIdx] = 0;
+		}
+	}
+}
+
+/// <summary>
+/// 그래프를 초기화한다.
+/// </summary>
+void Graph_AdjacencyMatrix::Clear()
+{
+	Graph::Clear();
+
+	for (size_t i = 0; i < m_capacity; i++)
+	{
+		std::fill_n(m_matrix[i], m_capacity, 0);
+	}
+}
+
+/// <summary>
 /// 해시 테이블의 현 상태를 출력한다.
 /// </summary>
 void Graph_AdjacencyMatrix::PrintGraph(GraphTraversal graphTraversal, string graphName)
 {
 	Graph::PrintGraph(graphTraversal, graphName);
+
+	// GraphTraversal 에 따라 두 가지 버전 추가 필요
 }
 #pragma endregion
 

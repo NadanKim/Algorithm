@@ -16,7 +16,7 @@ public:
 	virtual void RemoveEdge(string from, string to);
 	virtual void Clear();
 
-	virtual void PrintGraph(GraphTraversal graphTraversal = GraphTraversal::BFS, string graphName = "Graph");
+	virtual void PrintGraph(GraphTraversal graphTraversal = GraphTraversal::BFS, string graphName = "Graph_AdjacencyMatrix");
 
 private:
 	void Resize();
