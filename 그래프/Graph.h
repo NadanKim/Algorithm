@@ -53,6 +53,7 @@ public:
 
 	bool Exists(string name);
 	size_t GetNodeIndex(string name);
+	string GetNodeNameAt(size_t idx);
 
 private:
 	string GetGraphOptionString();
@@ -62,7 +63,46 @@ protected:
 	GraphOption CurrentGraphOption() { return m_graphOption; }
 	size_t GetNodeCount() { return m_graphNodeList.size(); }
 
+	GraphNode GetFirstNode()
+	{
+		size_t nodeCount{ GetNodeCount() };
+		if (nodeCount > 0)
+		{
+			for (size_t i = 0; i < nodeCount; i++)
+			{
+				if (m_graphNodeList[i].name != "")
+				{
+					return m_graphNodeList[i];
+				}
+			}
+			return m_graphNodeList[0];
+		}
+		return m_emptyNode;
+	}
+	GraphNode GetLastNode()
+	{ 
+		size_t nodeCount{ GetNodeCount() };
+		if (nodeCount > 0)
+		{
+			for (size_t i = nodeCount - 1; ; i--)
+			{
+				if (m_graphNodeList[i].name != "")
+				{
+					return m_graphNodeList[i];
+				}
+
+				if (i == 0)
+				{
+					return m_graphNodeList[GetNodeCount() - 1];
+				}
+			}
+		}
+		return m_emptyNode;
+	}
+
 private:
 	GraphOption m_graphOption;
 	vector<GraphNode> m_graphNodeList;
+
+	GraphNode m_emptyNode{ "EMPTY" };
 };

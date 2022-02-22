@@ -97,7 +97,7 @@ void Graph::PrintGraph(GraphTraversal graphTraversal, string graphName)
 			}
 		}
 	}
-	std::cout << "------------------------------------------\n";
+	std::cout << "\n------------------------------------------\n";
 }
 
 /// <summary>
@@ -132,6 +132,20 @@ size_t Graph::GetNodeIndex(string name)
 		}
 	}
 	return -1;
+}
+
+/// <summary>
+/// 인덱스 값에 해당하는 노드 이름을 반환한다.
+/// </summary>
+/// <param name="idx">이름을 가져올 노드 인덱스</param>
+/// <returns>노드 이름</returns>
+string Graph::GetNodeNameAt(size_t idx)
+{
+	if (idx < GetNodeCount())
+	{
+		return m_graphNodeList[idx].name;
+	}
+	return "None";
 }
 #pragma endregion
 

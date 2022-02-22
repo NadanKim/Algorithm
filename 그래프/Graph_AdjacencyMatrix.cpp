@@ -15,7 +15,7 @@ Graph_AdjacencyMatrix::Graph_AdjacencyMatrix(GraphOption graphOption, size_t siz
 	for (size_t i = 0; i < size; i++)
 	{
 		m_matrix[i] = new int[size];
-		std::fill_n(m_matrix[i], size, 0);
+		std::fill_n(m_matrix[i], size, None);
 	}
 }
 
@@ -76,8 +76,8 @@ bool Graph_AdjacencyMatrix::RemoveNode(string name)
 
 	for (size_t i = 0; i < m_capacity; i++)
 	{
-		m_matrix[idx][i] = 0;
-		m_matrix[i][idx] = 0;
+		m_matrix[idx][i] = None;
+		m_matrix[i][idx] = None;
 	}
 
 	return true;
@@ -94,11 +94,11 @@ void Graph_AdjacencyMatrix::RemoveEdge(string from, string to)
 
 	if (fromIdx != -1 && toIdx != -1)
 	{
-		m_matrix[fromIdx][toIdx] = 0;
+		m_matrix[fromIdx][toIdx] = None;
 
 		if (CurrentGraphOption() == GraphOption::Undirected)
 		{
-			m_matrix[toIdx][fromIdx] = 0;
+			m_matrix[toIdx][fromIdx] = None;
 		}
 	}
 }
@@ -112,7 +112,7 @@ void Graph_AdjacencyMatrix::Clear()
 
 	for (size_t i = 0; i < m_capacity; i++)
 	{
-		std::fill_n(m_matrix[i], m_capacity, 0);
+		std::fill_n(m_matrix[i], m_capacity, None);
 	}
 }
 
@@ -123,7 +123,44 @@ void Graph_AdjacencyMatrix::PrintGraph(GraphTraversal graphTraversal, string gra
 {
 	Graph::PrintGraph(graphTraversal, graphName);
 
-	// GraphTraversal 에 따라 두 가지 버전 추가 필요
+	std::cout << "- Graph Edges\n";
+	for (size_t i = 0; i < m_capacity; i++)
+	{
+		std::cout << GetNodeNameAt(i) << " : ";
+		for (size_t j = 0; j < m_capacity; j++)
+		{
+			if (m_matrix[i][j] == None)
+			{
+				continue;
+			}
+			std::cout << GetNodeNameAt(j) << " - ";
+		}
+		std::cout << '\n';
+	}
+	std::cout << "------------------------------------------\n";
+
+	std::cout << "- Graph Traversal from FIRST NODE\n";
+	GraphNode node{ GetFirstNode() };
+	size_t nodeIdx{ GetNodeIndex(node.name) };
+
+	if (node.name == "EMPTY")
+	{
+		std::cout << "EMPTY\n";
+	}
+	else
+	{
+		bool* nodeChecker = new bool[m_capacity] {};
+		if (graphTraversal == GraphTraversal::BFS)
+		{
+			PrintGraphBFS(nodeIdx);
+		}
+		else if (graphTraversal == GraphTraversal::DFS)
+		{
+			PrintGraphDFS(nodeIdx);
+		}
+		delete[] nodeChecker;
+	}
+	std::cout << "\n------------------------------------------\n";
 }
 #pragma endregion
 
@@ -150,5 +187,69 @@ void Graph_AdjacencyMatrix::Resize()
 
 	m_capacity = tempCapacity;
 	m_matrix = tempMatrix;
+}
+
+/// <summary>
+/// BFS로 그래프를 출력한다.
+/// </summary>
+void Graph_AdjacencyMatrix::PrintGraphBFS(size_t nodeIdx)
+{
+	bool* nodeChecker = new bool[m_capacity] {};
+	queue<size_t> q;
+	q.push(nodeIdx);
+
+	while (!q.empty())
+	{
+		size_t idx{ q.front() };
+		q.pop();
+
+		if (!nodeChecker[idx])
+		{
+			nodeChecker[idx] = true;
+
+			std::cout << GetNodeNameAt(idx) << " - ";
+			for (size_t i = 0; i < m_capacity; i++)
+			{
+				if (m_matrix[idx][i] != None)
+				{
+					q.push(i);
+				}
+			}
+		}
+	}
+
+	delete[] nodeChecker;
+}
+
+/// <summary>
+/// DFS로 그래프를 출력한다.
+/// </summary>
+void Graph_AdjacencyMatrix::PrintGraphDFS(size_t nodeIdx)
+{
+	bool* nodeChecker = new bool[m_capacity] {};
+	stack<size_t> s;
+	s.push(nodeIdx);
+
+	while (!s.empty())
+	{
+		size_t idx{ s.top() };
+		s.pop();
+
+		if (!nodeChecker[idx])
+		{
+			nodeChecker[idx] = true;
+
+			std::cout << GetNodeNameAt(idx) << " - ";
+			for (size_t i = 0; i < m_capacity; i++)
+			{
+				if (m_matrix[idx][i] != None)
+				{
+					s.push(i);
+				}
+			}
+		}
+	}
+
+	delete[] nodeChecker;
 }
 #pragma endregion
