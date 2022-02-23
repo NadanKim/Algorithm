@@ -1,5 +1,5 @@
 ﻿#include "Common.h"
-#include "그래프/Graph_AdjacencyMatrix.h"
+#include "그래프/Graph_AdjacencyList.h"
 
 int main()
 {
