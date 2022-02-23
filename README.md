@@ -25,4 +25,4 @@
     * [더블 해싱(Double Hashing)](https://github.com/NadanKim/Algorithm/blob/main/%ED%95%B4%EC%8B%9C%ED%85%8C%EC%9D%B4%EB%B8%94/HashTable_OpenAddressing_DoubleHashing.cpp)   
 * [그래프](https://github.com/NadanKim/Algorithm/blob/main/%EA%B7%B8%EB%9E%98%ED%94%84/Graph.cpp)
   * [인접 행렬 표현 방법(AdjacencyMatrix)](https://github.com/NadanKim/Algorithm/blob/main/%EA%B7%B8%EB%9E%98%ED%94%84/Graph_AdjacencyMatrix.cpp)
-  * 인접 리스트 표현 방법(AdjacencyList)
+  * [인접 리스트 표현 방법(AdjacencyList)](https://github.com/NadanKim/Algorithm/blob/main/%EA%B7%B8%EB%9E%98%ED%94%84/Graph_AdjacencyList.cpp)
